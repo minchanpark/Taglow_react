@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Implement Feature"
+  short_description: "Implement MVP features in the project structure"
+  default_prompt: "Use $taglow-implement-feature to implement the next Taglow React MVP feature."

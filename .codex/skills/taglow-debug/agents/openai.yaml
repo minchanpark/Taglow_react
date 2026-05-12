@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Debug"
+  short_description: "Reproduce and fix Taglow runtime issues"
+  default_prompt: "Use $taglow-debug to investigate and fix a Taglow React bug."

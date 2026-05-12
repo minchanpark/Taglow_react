@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Performance"
+  short_description: "Measure and improve loading and image performance"
+  default_prompt: "Use $taglow-performance to check and improve Taglow React performance."

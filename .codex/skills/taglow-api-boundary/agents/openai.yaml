@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow API Boundary"
+  short_description: "Keep service, gateway, and mapper boundaries clean"
+  default_prompt: "Use $taglow-api-boundary to add or change Taglow API integration code."

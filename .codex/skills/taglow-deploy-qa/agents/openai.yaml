@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Deploy QA"
+  short_description: "Validate Firebase hosting and release readiness"
+  default_prompt: "Use $taglow-deploy-qa to prepare or verify a Taglow React deployment."

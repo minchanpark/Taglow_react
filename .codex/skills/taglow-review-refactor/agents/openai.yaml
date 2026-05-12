@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Review Refactor"
+  short_description: "Review code quality and refactor safely"
+  default_prompt: "Use $taglow-review-refactor to review or refactor Taglow React code."

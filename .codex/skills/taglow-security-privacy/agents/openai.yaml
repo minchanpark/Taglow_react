@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Security Privacy"
+  short_description: "Check privacy, storage, logging, and CORS safety"
+  default_prompt: "Use $taglow-security-privacy to review Taglow React for privacy and security risks."

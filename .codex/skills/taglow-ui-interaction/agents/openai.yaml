@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow UI Interaction"
+  short_description: "Mobile UI, image bounds, and tag interaction"
+  default_prompt: "Use $taglow-ui-interaction to build or fix Taglow mobile UI and tagging interactions."

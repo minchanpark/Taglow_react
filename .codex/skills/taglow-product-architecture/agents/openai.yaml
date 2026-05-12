@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Product Architecture"
+  short_description: "Scope, phases, and architecture guardrails"
+  default_prompt: "Use $taglow-product-architecture to plan a Taglow React task against PRD/TDD constraints."
