@@ -1,0 +1,54 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import type { CreateTagRequest, TagCoordinate } from '../model';
+import { participantService, participantSessionStore } from '../service/participantServiceProvider';
+import { participantQueryKeys } from './queryKeys';
+
+export function useTaggingDetailController(params: { eventId: string; votePostId: string }) {
+  const queryClient = useQueryClient();
+  const sessionId = participantSessionStore.getOrCreateSessionId();
+  const votePostQuery = useQuery({
+    queryFn: () => participantService.fetchVotePost(params),
+    queryKey: participantQueryKeys.votePost(params.eventId, params.votePostId),
+  });
+  const tagsQuery = useQuery({
+    queryFn: () => participantService.fetchTags({ votePostId: params.votePostId, sessionId }),
+    queryKey: participantQueryKeys.tags(params.votePostId, sessionId),
+  });
+  const createTagMutation = useMutation({
+    mutationFn: (request: CreateTagRequest) =>
+      participantService.createTag({
+        request,
+        sessionId,
+        votePostId: params.votePostId,
+      }),
+    onSuccess: (tag) => {
+      queryClient.setQueryData(participantQueryKeys.tags(params.votePostId, sessionId), (current: unknown) => {
+        return Array.isArray(current) ? [...current, tag] : [tag];
+      });
+    },
+  });
+
+  const currentSessionTags = (tagsQuery.data ?? []).filter((tag) => tag.isMine);
+
+  return {
+    isLoading: votePostQuery.isLoading,
+    votePost: votePostQuery.data,
+    tags: currentSessionTags,
+    errorMessage: votePostQuery.isError ? '질문을 불러오지 못했습니다.' : undefined,
+    tagErrorMessage:
+      tagsQuery.isError || createTagMutation.isError ? '태그를 저장하거나 불러오지 못했습니다.' : undefined,
+    isSavingTag: createTagMutation.isPending,
+    retry: () => {
+      void votePostQuery.refetch();
+      void tagsQuery.refetch();
+    },
+    submitTextTag: (text: string, coordinate: TagCoordinate, stickerSeed?: number) =>
+      createTagMutation.mutateAsync({
+        coordinate,
+        stickerSeed,
+        text,
+        type: 'text',
+      }),
+  };
+}

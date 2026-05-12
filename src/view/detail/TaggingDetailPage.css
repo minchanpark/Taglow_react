@@ -1,0 +1,233 @@
+.taggingDetailPage {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #0d1011;
+  color: #ffffff;
+}
+
+.taggingDetailHeader {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr) 74px;
+  align-items: center;
+  min-height: 38px;
+  padding: max(5px, env(safe-area-inset-top)) 10px 5px;
+  background: #090b0c;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 10%);
+}
+
+.taggingBackLink,
+.taggingDoneButton {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.taggingBackLink {
+  justify-self: start;
+  gap: 2px;
+  color: #ffffff;
+}
+
+.taggingDoneButton {
+  justify-self: end;
+  min-width: 48px;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0d1011;
+}
+
+.taggingQuestionTitle {
+  overflow: hidden;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.taggingImageStage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: #9bdbe2;
+}
+
+.taggingImageFrame {
+  position: absolute;
+  overflow: hidden;
+  background: #9bdbe2;
+}
+
+.taggingQuestionImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.taggingImageNotice {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: rgb(0 0 0 / 72%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.taggingImageNotice.error {
+  background: rgb(179 38 30 / 88%);
+}
+
+.taggingErrorBanner,
+.taggingSaveStatus {
+  position: absolute;
+  right: 16px;
+  left: 16px;
+  z-index: 5;
+  border-radius: 999px;
+  padding: 9px 13px;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.taggingErrorBanner {
+  top: 52px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  background: rgb(179 38 30 / 92%);
+  color: #ffffff;
+}
+
+.taggingErrorBanner p {
+  margin: 0;
+}
+
+.taggingErrorBanner button {
+  min-height: 28px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 10px;
+  background: #ffffff;
+  color: #0d1011;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.taggingSaveStatus {
+  bottom: max(140px, calc(env(safe-area-inset-bottom) + 140px));
+  background: rgb(0 0 0 / 72%);
+  color: #ffffff;
+}
+
+.taggingStickerLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.taggingStickerLayer .tagSticker-placed {
+  position: absolute;
+  left: var(--tag-x);
+  top: var(--tag-y);
+  transform: translate(-50%, -50%);
+}
+
+.taggingStagedDock {
+  position: absolute;
+  right: 13px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  left: 13px;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.taggingStagedDock .tagSticker-staged {
+  position: relative;
+}
+
+.taggingStagedDock .tagSticker-staged.dragging {
+  position: fixed;
+  top: var(--drag-y);
+  left: var(--drag-x);
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+.taggingInputBar {
+  position: absolute;
+  right: 13px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  left: 13px;
+  z-index: 4;
+  display: grid;
+}
+
+.taggingInputBar input {
+  width: 100%;
+  min-height: 52px;
+  border: 2px solid var(--color-primary);
+  border-radius: 999px;
+  outline: 0;
+  padding: 0 22px;
+  background: #050505;
+  box-shadow: 0 0 13px rgb(252 239 63 / 50%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.taggingInputBar input::placeholder {
+  color: rgb(255 255 255 / 88%);
+}
+
+.taggingInputBar input:focus {
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 20%), 0 0 16px rgb(252 239 63 / 58%);
+}
+
+.taggingInputError {
+  position: absolute;
+  right: 16px;
+  bottom: calc(100% + 8px);
+  left: 16px;
+  margin: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgb(179 38 30 / 92%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .taggingDetailPage {
+    min-height: 100dvh;
+  }
+}

@@ -1,0 +1,99 @@
+.finalScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: max(34px, env(safe-area-inset-top)) 28px max(34px, env(safe-area-inset-bottom));
+  background: #ffffff;
+  color: #050505;
+}
+
+.finalCard {
+  display: grid;
+  min-height: 510px;
+  place-items: center;
+  align-content: center;
+  justify-items: center;
+  gap: 0;
+  border: 1px solid #dededb;
+  border-radius: 38px;
+  background: #f7f8f9;
+  box-shadow: 0 28px 52px rgb(0 0 0 / 10%);
+  text-align: center;
+}
+
+.finalCheckMark {
+  width: 116px;
+  height: 116px;
+  display: grid;
+  place-items: center;
+  border: 8px solid #fac70b;
+  border-radius: 50%;
+  color: #fac70b;
+}
+
+.finalCard h1 {
+  margin: 56px 0 0;
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+
+.finalCard p {
+  margin: 32px 0 0;
+  color: #6f6f68;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.finalHomeButton {
+  min-height: 72px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  border-radius: 999px;
+  background: #000000;
+  box-shadow: 0 16px 28px rgb(0 0 0 / 18%);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+@media (max-width: 390px) {
+  .finalScreen {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .finalCard {
+    min-height: 430px;
+    border-radius: 30px;
+  }
+
+  .finalCheckMark {
+    width: 96px;
+    height: 96px;
+    border-width: 7px;
+  }
+
+  .finalCard h1 {
+    margin-top: 42px;
+    font-size: 32px;
+  }
+
+  .finalCard p {
+    margin-top: 24px;
+    font-size: 18px;
+  }
+
+  .finalHomeButton {
+    min-height: 64px;
+    margin-top: 38px;
+    font-size: 20px;
+  }
+}

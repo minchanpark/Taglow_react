@@ -1,0 +1,83 @@
+.tagSticker {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #101010;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.tagSticker:disabled {
+  opacity: 1;
+}
+
+/* 
+드래그 되기 전, 스티커 태그 이미지 자체의 크기를 조절하는 CSS
+*/
+.tagSticker img {
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.tagSticker-placed {
+  width: 94px;
+  min-height: 76px;
+  cursor: pointer;
+}
+
+/* 
+이미지에 올려진 스티커 태그 이미지 자체의 크기를 조절하는 CSS
+*/
+.tagSticker-placed img {
+  width: 40px;
+  height: 40px;
+  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 24%));
+}
+
+.tagSticker-placed.isDialogOpen {
+  width: 170px;
+  min-height: 54px;
+  z-index: 5;
+}
+
+.tagSticker-placed.isDialogOpen img {
+  width: 170px;
+  height: auto;
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 18%));
+}
+
+.tagStickerContent {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  left: 28px;
+  overflow: hidden;
+  color: #101010;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.tagSticker-staged {
+  width: 140px;
+  min-height: 118px;
+  cursor: grab;
+}
+
+.tagSticker-staged.dragging {
+  cursor: grabbing;
+}
+
+.tagSticker-staged img {
+  width: 116px;
+  height: 116px;
+  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 26%));
+}

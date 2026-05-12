@@ -8,7 +8,7 @@ import { ThanksPage } from '../view/thanks/ThanksPage';
 export const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/e/1" replace />,
+    element: <Navigate to="/e/11" replace />,
   },
   {
     path: '/e/:eventId',
@@ -28,6 +28,6 @@ export const router: ReturnType<typeof createBrowserRouter> = createBrowserRoute
   },
   {
     path: '*',
-    element: <Navigate to="/e/1" replace />,
+    element: <Navigate to="/e/11" replace />,
   },
 ]);
