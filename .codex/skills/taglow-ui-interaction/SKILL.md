@@ -1,85 +1,55 @@
 ---
 name: taglow-ui-interaction
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "Build, debug, or review Taglow mobile UI and image tagging interactions: responsive mobile frame, home cards, DOM img detail image, image bounds, ratio coordinate conversion, tag overlay, staged sticker drag/drop, bottom SOI input bar, keyboard/safe-area behavior, thanks/final views. Use for view, CSS, pointer, layout, and visual interaction work."
 ---
 
-# Taglow Ui Interaction
+# Taglow UI Interaction
 
 ## Overview
 
-[TODO: 1-2 sentences explaining what this skill enables]
+Implement the browser-native mobile tagging experience: fast visual feedback, stable image bounds, reliable touch/pointer interaction, and no hidden failure states.
 
-## Structuring This Skill
+## Required Reading
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+- `src/view/AGENTS.md`
+- Target page/widget `AGENTS.md`
+- `src/theme/AGENTS.md`
+- `src/utils/AGENTS.md`
+- PRD U1-U6 and TDD `이미지 및 좌표 설계`, `View 설계`, `Theme 설계`
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" -> "Reading" -> "Creating" -> "Editing"
-- Structure: ## Overview -> ## Workflow Decision Tree -> ## Step 1 -> ## Step 2...
+## UI Rules
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" -> "Merge PDFs" -> "Split PDFs" -> "Extract Text"
-- Structure: ## Overview -> ## Quick Start -> ## Task Category 1 -> ## Task Category 2...
+- Mobile first: 360-430px must work; desktop uses a centered 430-520px mobile frame.
+- Keep text inside containers with wrapping, stable dimensions, or ellipsis.
+- Use 44px or larger touch targets for tappable controls.
+- Render question images with DOM `<img>`, `object-fit: contain`, `decoding="async"`, and explicit load/error state.
+- Do not let image taps create new tags.
+- Do not hide pending or failed tag states.
+- Keep reward PII only in thanks flow.
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" -> "Colors" -> "Typography" -> "Features"
-- Structure: ## Overview -> ## Guidelines -> ## Specifications -> ## Usage...
+## Image And Tagging Rules
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" -> numbered capability list
-- Structure: ## Overview -> ## Core Capabilities -> ### 1. Feature -> ### 2. Feature...
+- Use one image rendered rect for `<img>`, overlay, and drop target.
+- Compute image rect from container size and effective aspect ratio.
+- Prefer natural image ratio after load; fallback to server `imageRatio`, then `4 / 5`.
+- Store and pass `TagCoordinate`, never raw pixels.
+- Convert pointer client position to local image ratio at drop time.
+- Use `(0.5, 0.5)` fallback when no drag happened or bounds are unavailable.
+- Use `touch-action: none` on draggable sticker elements.
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+## Workflow
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+1. Identify whether the work belongs in page, widget, utils, or theme.
+2. Keep component props domain-oriented and callback-based.
+3. Put pure coordinate math in `src/utils` or `tagDropGeometry`.
+4. Keep API saves in controller callbacks, not widgets.
+5. Verify loading, empty, error, failed, pending, and success visuals.
+6. Check desktop and mobile viewport screenshots when a dev server exists.
 
-## [TODO: Replace with the first main section based on chosen structure]
+## Common Acceptance Checks
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
-
-## Resources (optional)
-
-Create only the resource directories this skill actually needs. Delete this section if no resources are required.
-
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
-
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
-
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Codex for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Codex's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Codex should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Codex produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
----
-
-**Not every skill requires all three types of resources.**
+- Home card click navigates to detail.
+- Broken image shows fallback, not a black/blank surface.
+- Staged sticker can be dragged and saved.
+- Completing without drag saves center coordinate.
+- Mobile keyboard does not permanently hide the input flow.

@@ -1,85 +1,51 @@
 ---
 name: taglow-performance
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "Measure, debug, and improve Taglow React performance: QR-to-first-screen, first text tag within 30 seconds, Vite bundle size, route-level code splitting, font/asset loading, DOM image loading, layout shift, mobile input responsiveness, and Firebase cache headers. Use when checking speed, bundle growth, image performance, or production readiness."
 ---
 
 # Taglow Performance
 
 ## Overview
 
-[TODO: 1-2 sentences explaining what this skill enables]
+Optimize the field experience: fast app shell, stable image loading, and quick first tag. Avoid adding non-MVP weight to the initial bundle.
 
-## Structuring This Skill
+## Performance Targets
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+- JS loading should not leave a blank white screen.
+- First route must show app shell quickly on slow 4G.
+- First text tag should be possible within 30 seconds.
+- Detail images should load through DOM `<img>` and never remain a black/blank surface after successful network load.
+- Fonts/assets should not block first paint.
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" -> "Reading" -> "Creating" -> "Editing"
-- Structure: ## Overview -> ## Workflow Decision Tree -> ## Step 1 -> ## Step 2...
+## Optimization Rules
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" -> "Merge PDFs" -> "Split PDFs" -> "Extract Text"
-- Structure: ## Overview -> ## Quick Start -> ## Task Category 1 -> ## Task Category 2...
+- Keep media upload SDKs out of the MVP initial bundle.
+- Lazy-load thanks/final and future media modules when useful.
+- Prefer WOFF2 subset or system font fallback; do not ship multiple large OTFs by default.
+- Keep logo/favicon small and purpose-sized.
+- Use `decoding="async"` for detail images.
+- Use server image ratio or natural ratio to reduce layout shift.
+- Cache hashed assets long-term, but keep app shell/index no-cache.
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" -> "Colors" -> "Typography" -> "Features"
-- Structure: ## Overview -> ## Guidelines -> ## Specifications -> ## Usage...
+## Measurement Workflow
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" -> numbered capability list
-- Structure: ## Overview -> ## Core Capabilities -> ### 1. Feature -> ### 2. Feature...
+1. Build the app and inspect bundle output.
+2. Check initial route payload and route-level chunks.
+3. Run Playwright or browser profiling for:
+   - `/e/:eventId` app shell visible
+   - home visible
+   - detail image visible
+   - input focus
+   - submit
+   - tag visible
+4. Check mobile viewport layout and safe-area effects.
+5. Make the smallest change that removes measurable bottleneck.
+6. Re-measure and record before/after.
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+## Watch List
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
-
-## [TODO: Replace with the first main section based on chosen structure]
-
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
-
-## Resources (optional)
-
-Create only the resource directories this skill actually needs. Delete this section if no resources are required.
-
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
-
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
-
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Codex for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Codex's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Codex should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Codex produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
----
-
-**Not every skill requires all three types of resources.**
+- Large dependencies added to `dependencies`.
+- Fonts or images imported into app shell.
+- Whole-page rerenders during drag.
+- Unstable image rect causing overlay layout shift.
+- Query refetch loops on route changes.

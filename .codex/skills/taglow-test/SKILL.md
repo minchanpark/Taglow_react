@@ -1,85 +1,61 @@
 ---
 name: taglow-test
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "Create, update, run, and diagnose Taglow React tests across Vitest unit tests, React Testing Library component tests, MSW API mocks, and Playwright e2e flows. Use when adding test coverage, verifying a feature, reproducing bugs, checking API boundary behavior, image visibility, drag/drop, thanks/final, or release readiness."
 ---
 
 # Taglow Test
 
 ## Overview
 
-[TODO: 1-2 sentences explaining what this skill enables]
+Test from the narrowest stable layer outward. Prioritize gateway/mapper boundaries, image visibility, coordinate math, and the core QR-to-final flow.
 
-## Structuring This Skill
+## Test Pyramid
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+- Unit: domain helpers, mapper, gateway, openapi service orchestration, session store, tagging engine.
+- Component: pages/widgets state rendering and user events with mocked services/MSW.
+- E2E: routing, image visibility, text tag creation, drag/default fallback, thanks/final, failure states.
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: DOCX skill with "Workflow Decision Tree" -> "Reading" -> "Creating" -> "Editing"
-- Structure: ## Overview -> ## Workflow Decision Tree -> ## Step 1 -> ## Step 2...
+## Required Cases
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" -> "Merge PDFs" -> "Split PDFs" -> "Extract Text"
-- Structure: ## Overview -> ## Quick Start -> ## Task Category 1 -> ## Task Category 2...
+Unit:
+- `imageRatio: 7353 -> 0.7353`
+- proxy image URL priority
+- coordinate aliases and clamp
+- questions list/object selection
+- `taglow-Session-Id` header on tag operations
+- no `Content-Type` on bodyless GET
+- event-users body redaction
+- failed save marker recovery
+- default center fallback
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" -> "Colors" -> "Typography" -> "Features"
-- Structure: ## Overview -> ## Guidelines -> ## Specifications -> ## Usage...
+Component:
+- home loading/error/empty/list
+- `ItemCard` click
+- image load/error fallback
+- overlay ratio placement
+- bottom input staged/cancel
+- thanks consent and skip
+- final home navigation
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" -> numbered capability list
-- Structure: ## Overview -> ## Core Capabilities -> ### 1. Feature -> ### 2. Feature...
+E2E:
+- `/e/11 -> /e/11/posts/31 -> tag -> thanks -> final`
+- detail image visible via request, `<img>.complete`, natural size, and screenshot non-background pixels
+- drag sticker and default center fallback
+- save failure retry
+- image failure fallback
 
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
+## Workflow
 
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
+1. Read the target directory `AGENTS.md`.
+2. Choose the lowest test layer that proves the behavior.
+3. Use Mock Service/MSW rather than real API for deterministic tests.
+4. Avoid PII in fixtures and snapshots.
+5. Run focused tests first, then broader commands.
+6. If a test cannot run because scaffolding is missing, state exactly what is missing.
 
-## [TODO: Replace with the first main section based on chosen structure]
+## Anti-Patterns
 
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
-
-## Resources (optional)
-
-Create only the resource directories this skill actually needs. Delete this section if no resources are required.
-
-### scripts/
-Executable code (Python/Bash/etc.) that can be run directly to perform specific operations.
-
-**Examples from other skills:**
-- PDF skill: `fill_fillable_fields.py`, `extract_form_field_info.py` - utilities for PDF manipulation
-- DOCX skill: `document.py`, `utilities.py` - Python modules for document processing
-
-**Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Codex for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Codex's process and thinking.
-
-**Examples from other skills:**
-- Product management: `communication.md`, `context_building.md` - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Codex should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Codex produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
----
-
-**Not every skill requires all three types of resources.**
+- Do not use real production contact info.
+- Do not make View tests assert raw DTO shapes.
+- Do not rely on arbitrary waits in Playwright when state/network waits are possible.
+- Do not skip image pixel checks for the core visibility risk.

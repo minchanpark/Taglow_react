@@ -68,17 +68,20 @@ src/
     └── e2e/
 ```
 
-## Agent Skill Map
+## Project Skills
 
-이 섹션의 "스킬"은 설치형 Codex skill이 아니라, 이 프로젝트에서 작업을 나누는 역할 기준이다.
+프로젝트 전용 Codex skills는 `.codex/skills/taglow-*` 아래에 둔다. 작업 성격이 맞으면 해당 skill의 `SKILL.md`를 먼저 읽는다.
 
-- Product skill: PRD의 사용자 플로우, 개인정보 정책, MVP/비MVP 범위를 확인한다.
-- Architecture skill: TDD의 MVC 확장 구조와 의존성 방향을 지킨다.
-- API boundary skill: `ParticipantService`, gateway, mapper의 경계를 유지한다.
-- Interaction skill: 이미지 bounds, ratio 좌표, pointer drag, 하단 입력바 흐름을 검증한다.
-- UI skill: 모바일 360-430px, desktop 430-520px 중심 프레임, 텍스트 overflow, safe area를 확인한다.
-- QA skill: Vitest, React Testing Library, Playwright 기준으로 mapper/gateway/core flow를 검증한다.
-- Deployment skill: Firebase Hosting same-origin, `/e/**` React, `/flutter/**` 비교 정책을 유지한다.
+- `taglow-product-architecture`: PRD/TDD 범위, MVP 단계, route/deploy, 아키텍처 의사결정.
+- `taglow-implement-feature`: React/TypeScript 기능 구현과 레이어 배치.
+- `taglow-api-boundary`: `ParticipantService`, gateway, mapper, DTO alias, endpoint/header 정책.
+- `taglow-ui-interaction`: 모바일 UI, DOM `<img>`, image bounds, ratio 좌표, overlay, drag/drop, 하단 입력바.
+- `taglow-debug`: 런타임, 테스트, API, CORS, 이미지, 라우팅, 상태, drag/drop 문제 재현과 수정.
+- `taglow-security-privacy`: 개인정보, consent, storage, log redaction, secrets, CORS/origin 보안 점검.
+- `taglow-test`: Vitest, React Testing Library, MSW, Playwright 테스트 작성/실행/진단.
+- `taglow-performance`: 초기 로딩, bundle, font/asset, image loading, 30초 첫 태그 성능 점검.
+- `taglow-deploy-qa`: Firebase Hosting, `/e/**` React, `/flutter/**` 비교 배포, release smoke QA.
+- `taglow-review-refactor`: 코드 리뷰, 경계 누수 점검, 리팩터링, pre-merge 품질 확인.
 
 ## Implementation Defaults
 
