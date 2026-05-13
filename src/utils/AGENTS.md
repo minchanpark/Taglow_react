@@ -10,6 +10,6 @@
 
 ## Guardrails
 
-- utils에서 React component나 service 구현을 import하지 않는다.
+- utils에서 React component나 API controller/gateway 구현을 import하지 않는다.
 - 개인정보를 storage나 log에 남기지 않는다.
 - DOM 의존 helper는 입력/출력을 명확히 하고 unit test 가능한 core 계산을 분리한다.

@@ -1,23 +1,23 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { CreateTagRequest, TagCoordinate } from '../model';
-import { participantService, participantSessionStore } from '../service/participantServiceProvider';
+import { participantController, participantSessionStore } from '../controller/participantControllerProvider';
 import { participantQueryKeys } from './queryKeys';
 
-export function useTaggingDetailController(params: { eventId: string; votePostId: string }) {
+export function useTaggingDetailQuery(params: { eventId: string; votePostId: string }) {
   const queryClient = useQueryClient();
   const sessionId = participantSessionStore.getOrCreateSessionId();
   const votePostQuery = useQuery({
-    queryFn: () => participantService.fetchVotePost(params),
+    queryFn: () => participantController.fetchVotePost(params),
     queryKey: participantQueryKeys.votePost(params.eventId, params.votePostId),
   });
   const tagsQuery = useQuery({
-    queryFn: () => participantService.fetchTags({ votePostId: params.votePostId, sessionId }),
+    queryFn: () => participantController.fetchTags({ votePostId: params.votePostId, sessionId }),
     queryKey: participantQueryKeys.tags(params.votePostId, sessionId),
   });
   const createTagMutation = useMutation({
     mutationFn: (request: CreateTagRequest) =>
-      participantService.createTag({
+      participantController.createTag({
         request,
         sessionId,
         votePostId: params.votePostId,

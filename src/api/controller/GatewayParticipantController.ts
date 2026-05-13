@@ -1,9 +1,9 @@
 import type { CreateTagRequest, ParticipantEvent, ParticipantTag, VotePost } from '../model';
-import type { ParticipantApiGateway } from './gateway/ParticipantApiGateway';
-import type { ParticipantPayloadMapper } from './mapper/ParticipantPayloadMapper';
-import type { ParticipantService } from './ParticipantService';
+import type { ParticipantApiGateway } from '../service/gateway/ParticipantApiGateway';
+import type { ParticipantPayloadMapper } from '../service/mapper/ParticipantPayloadMapper';
+import type { ParticipantController } from './ParticipantController';
 
-export class GatewayParticipantService implements ParticipantService {
+export class GatewayParticipantController implements ParticipantController {
   constructor(
     private readonly deps: {
       gateway: ParticipantApiGateway;

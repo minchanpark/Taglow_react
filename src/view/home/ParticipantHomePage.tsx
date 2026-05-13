@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { useItemListController } from '../../api/controller/useItemListController';
+import { useItemListQuery } from '../../api/query/useItemListQuery';
 import logoUrl from '../../assets/logo/taglow-logo.svg';
 import { HomeQuestionCard } from './components/HomeQuestionCard';
 import './ParticipantHomePage.css';
@@ -8,7 +8,7 @@ import './ParticipantHomePage.css';
 export function ParticipantHomePage() {
   const { eventId = '11' } = useParams();
   const { emptyItemsMessage, errorMessage, event, hrefForVotePost, isLoading, retry, retryActionLabel, votePosts } =
-    useItemListController(eventId);
+    useItemListQuery(eventId);
 
   return (
     <main className="mobileFrame homeScreen">

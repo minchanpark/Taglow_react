@@ -12,4 +12,4 @@
 ## Guardrails
 
 - component test에서 실제 서버 API를 호출하지 않는다.
-- View가 controller/service boundary를 우회하도록 mock하지 않는다.
+- View가 query/controller/gateway boundary를 우회하도록 mock하지 않는다.

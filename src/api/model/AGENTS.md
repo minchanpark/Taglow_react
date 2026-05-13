@@ -12,4 +12,4 @@
 
 - 서버 DTO 이름을 그대로 노출하지 않는다.
 - `fetch`, localStorage, React hook, browser DOM API를 import하지 않는다.
-- model은 service 구현이나 View layout을 알면 안 된다.
+- model은 controller/gateway/mapper 구현이나 View layout을 알면 안 된다.

@@ -32,6 +32,12 @@ React 이관 검토 배경:
 - 서버 API DTO와 React domain model 사이의 API 적응 계층 요구사항
 - React 이관 성공 판단 기준과 QA 시나리오
 
+구현 구조 참고: 현재 React 구현은 Flutter/Riverpod식 service/controller 분리를 줄여
+`api/query`의 TanStack Query hook이 화면 상태를 담당하고, `api/controller`의
+`ParticipantController`가 gateway/mapper를 조합하는 domain API facade 역할을 한다.
+문서의 `ParticipantService`/`OpenApiParticipantService` 표현은 이 구조에서는
+`ParticipantController`/`GatewayParticipantController`에 대응한다.
+
 제외 범위:
 
 - 관리자 페이지

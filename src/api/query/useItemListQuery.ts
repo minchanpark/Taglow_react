@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { participantService } from '../service/participantServiceProvider';
+import { participantController } from '../controller/participantControllerProvider';
 import { participantQueryKeys } from './queryKeys';
 
-export function useItemListController(eventId: string) {
+export function useItemListQuery(eventId: string) {
   const eventQuery = useQuery({
-    queryFn: () => participantService.fetchEvent(eventId),
+    queryFn: () => participantController.fetchEvent(eventId),
     queryKey: participantQueryKeys.event(eventId),
   });
 

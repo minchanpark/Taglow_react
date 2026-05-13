@@ -4,7 +4,7 @@
 
 ## Responsibilities
 
-- View는 controller hook을 호출하고 화면 상태를 렌더링한다.
+- View는 `src/api/query` hook을 호출하고 화면 상태를 렌더링한다.
 - 모바일 우선으로 360-430px 폭을 검증하고, desktop에서는 430-520px 중심 프레임을 유지한다.
 - loading, error, empty, success, failed/pending 상태를 숨기지 않는다.
 - 이미지 상세 화면은 DOM `<img>`와 overlay가 같은 rendered bounds를 공유하게 한다.

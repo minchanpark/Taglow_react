@@ -1,4 +1,4 @@
-import type { CSSProperties, RefObject, SyntheticEvent } from 'react';
+import type { CSSProperties, PointerEvent, RefObject, SyntheticEvent, WheelEvent } from 'react';
 
 import { TagSticker } from '../../../components/TagSticker';
 import type { ParticipantTag } from '../../../api/model';
@@ -12,6 +12,11 @@ interface TaggingImageAreaProps {
   imageUrl?: string;
   onImageError(): void;
   onImageLoad(event: SyntheticEvent<HTMLImageElement>): void;
+  onStagePointerCancel(event: PointerEvent<HTMLElement>): void;
+  onStagePointerDown(event: PointerEvent<HTMLElement>): void;
+  onStagePointerMove(event: PointerEvent<HTMLElement>): void;
+  onStagePointerUp(event: PointerEvent<HTMLElement>): void;
+  onStageWheel(event: WheelEvent<HTMLElement>): void;
   stickerUrlForTag(tag: ParticipantTag): string;
   tags: ParticipantTag[];
 }
@@ -25,11 +30,25 @@ export function TaggingImageArea({
   imageUrl,
   onImageError,
   onImageLoad,
+  onStagePointerCancel,
+  onStagePointerDown,
+  onStagePointerMove,
+  onStagePointerUp,
+  onStageWheel,
   stickerUrlForTag,
   tags,
 }: TaggingImageAreaProps) {
   return (
-    <section className="taggingImageStage" ref={imageStageRef} aria-label="태깅 이미지">
+    <section
+      className="taggingImageStage"
+      ref={imageStageRef}
+      aria-label="태깅 이미지"
+      onPointerCancel={onStagePointerCancel}
+      onPointerDown={onStagePointerDown}
+      onPointerMove={onStagePointerMove}
+      onPointerUp={onStagePointerUp}
+      onWheel={onStageWheel}
+    >
       <div className="taggingImageFrame" ref={imageFrameRef} style={imageFrameStyle}>
         {imageUrl ? (
           <img

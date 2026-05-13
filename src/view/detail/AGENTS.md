@@ -5,7 +5,7 @@
 ## Responsibilities
 
 - 질문 이미지, 상단 bar, 완료 버튼, 오류 배너, 하단 SOI 입력바, 태그 overlay를 조합한다.
-- `useTaggingDetailController`와 `useTagDraftController`를 사용한다.
+- `useTaggingDetailQuery`와 필요한 interaction store/hook을 사용한다.
 - 완료 버튼은 pending draft가 있으면 기본 좌표 저장 fallback을 시도한 뒤 thanks route로 이동한다.
 - 이미지 load/error와 태그 저장 success/failure 상태를 사용자에게 보여준다.
 

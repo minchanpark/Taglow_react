@@ -9,24 +9,32 @@
 기존 Flutter 프로젝트의 구조적 장점은 유지한다.
 
 - `api/model`
-- `api/service`
+- `api/query`
 - `api/controller`
+- `api/service/gateway`
+- `api/service/mapper`
 - `view`
 - `utils`
 - `theme`
+
+현재 React 구현에서는 Flutter/Riverpod식 controller hook과 service facade 이름을 줄이고,
+`api/query`의 TanStack Query hook이 화면 상태를 담당하며 `api/controller`의
+`ParticipantController`가 gateway/mapper를 조합하는 domain API facade 역할을 한다.
+아래 문서의 `ParticipantService`/`OpenApiParticipantService` 표현은 이 구조에서는
+`ParticipantController`/`GatewayParticipantController`에 대응한다.
 
 다만 React의 웹 친화적 특성을 활용해 이미지 렌더링, 초기 로딩, pointer drag, browser storage, Playwright 검증을 더 직접적으로 설계한다.
 
 ### 0-2. 설계 목표
 
 1. Flutter의 MVC 확장 패턴을 React에 맞게 재구성한다.
-2. View가 Service/API/browser storage를 직접 호출하지 않게 한다.
-3. Service 내부에 gateway/mapper 기반 API 적응 계층을 두고 서버 DTO를 프론트 domain model로 변환한다.
-4. Controller hook/store가 View의 상태와 UI 이벤트를 관리한다.
+2. View가 API controller/browser storage를 직접 호출하지 않게 한다.
+3. Gateway/mapper 기반 API 적응 계층을 두고 서버 DTO를 프론트 domain model로 변환한다.
+4. Query hook/store가 View의 상태와 UI 이벤트를 관리한다.
 5. 이미지 표시와 태그 좌표 계산은 DOM `<img>` rendered bounds를 기준으로 한다.
 6. Firebase Hosting same-origin 배포를 지원한다.
-7. Mock Service와 OpenAPI Service를 같은 Controller/View 계약으로 교체 가능하게 한다.
-8. 서버 endpoint, header, DTO field alias 변화가 `api/service` 경계 밖으로 새지 않게 한다.
+7. Mock 구현과 OpenAPI 구현을 같은 Query/View 계약으로 교체 가능하게 한다.
+8. 서버 endpoint, header, DTO field alias 변화가 gateway/mapper/controller 경계 밖으로 새지 않게 한다.
 
 ---
 

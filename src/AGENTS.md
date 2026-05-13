@@ -4,7 +4,7 @@
 
 ## Responsibilities
 
-- route, controller, service, view, utils, theme, assets, tests를 명확히 분리한다.
+- route, query hook, API controller, gateway/mapper, view, utils, theme, assets, tests를 명확히 분리한다.
 - `eventId`는 프론트 route/domain 이름으로 유지하되 API 경계에서는 `voteId`로 해석한다.
 - `votePostId`는 프론트 route/domain 이름으로 유지하되 API 경계에서는 `questionId`로 해석한다.
 - 이미지 좌표는 pixel이 아니라 `TagCoordinate` ratio로만 저장한다.

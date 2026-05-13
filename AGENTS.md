@@ -13,7 +13,7 @@
 - 참여자는 로그인 없이 태그를 남길 수 있어야 한다.
 - 리워드 개인정보 입력은 태그 제출 이후의 선택 흐름이며, 태그 데이터와 분리한다.
 - React 구현은 DOM `<img>`를 기본 이미지 렌더링 경로로 사용한다.
-- Mock Service와 OpenAPI Service는 같은 `ParticipantService` 계약으로 교체 가능해야 한다.
+- Mock 구현과 OpenAPI 구현은 같은 `ParticipantController` 계약으로 교체 가능해야 한다.
 
 ## Architecture
 
@@ -21,8 +21,8 @@
 
 ```text
 view
+  -> api/query
   -> api/controller
-  -> api/service
   -> api/service/gateway + api/service/mapper
   -> api/model + utils + browser API wrapper + server API
 ```
@@ -30,8 +30,8 @@ view
 금지 규칙:
 
 - View에서 `fetch`, `axios`, generated API client, localStorage를 직접 사용하지 않는다.
-- View와 Controller는 서버 DTO field name을 알면 안 된다.
-- Service는 React component를 import하지 않는다.
+- View와 Query hook은 서버 DTO field name을 알면 안 된다.
+- API Controller와 service adapter는 React component를 import하지 않는다.
 - Gateway 밖에서는 endpoint, header, path id 해석 정책을 다루지 않는다.
 - Mapper 밖에서는 raw payload field alias를 정규화하지 않는다.
 - 개인정보 body를 console/debug/error log에 남기지 않는다.
@@ -44,11 +44,12 @@ src/
 ├── app/
 ├── api/
 │   ├── model/
+│   ├── query/
+│   ├── controller/
+│   │   └── stores/
 │   ├── service/
 │   │   ├── gateway/
 │   │   └── mapper/
-│   └── controller/
-│       └── stores/
 ├── view/
 │   ├── home/
 │   │   └── widgets/
@@ -74,7 +75,7 @@ src/
 
 - `taglow-product-architecture`: PRD/TDD 범위, MVP 단계, route/deploy, 아키텍처 의사결정.
 - `taglow-implement-feature`: React/TypeScript 기능 구현과 레이어 배치.
-- `taglow-api-boundary`: `ParticipantService`, gateway, mapper, DTO alias, endpoint/header 정책.
+- `taglow-api-boundary`: `ParticipantController`, gateway, mapper, DTO alias, endpoint/header 정책.
 - `taglow-ui-interaction`: 모바일 UI, DOM `<img>`, image bounds, ratio 좌표, overlay, drag/drop, 하단 입력바.
 - `taglow-debug`: 런타임, 테스트, API, CORS, 이미지, 라우팅, 상태, drag/drop 문제 재현과 수정.
 - `taglow-security-privacy`: 개인정보, consent, storage, log redaction, secrets, CORS/origin 보안 점검.

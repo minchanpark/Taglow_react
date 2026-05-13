@@ -5,7 +5,7 @@
 ## Responsibilities
 
 - 이벤트/투표 제목, 설명, 항목 카드 목록, loading/error/empty 상태를 렌더링한다.
-- `useItemListController`를 통해 event와 `VotePost[]`를 받는다.
+- `useItemListQuery`를 통해 event와 `VotePost[]`를 받는다.
 - 항목 클릭 시 `/e/:eventId/posts/:votePostId`로 이동한다.
 
 ## Guardrails

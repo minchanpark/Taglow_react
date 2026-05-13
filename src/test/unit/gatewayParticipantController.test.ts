@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { createTagCoordinate } from '../../api/model';
-import { GatewayParticipantService } from '../../api/service/GatewayParticipantService';
+import { GatewayParticipantController } from '../../api/controller/GatewayParticipantController';
 import type { ParticipantApiGateway } from '../../api/service/gateway/ParticipantApiGateway';
 import { ParticipantPayloadMapper } from '../../api/service/mapper/ParticipantPayloadMapper';
 
-describe('GatewayParticipantService', () => {
+describe('GatewayParticipantController', () => {
   it('marks a newly created tag as mine for the current session', async () => {
     const gateway = {
       createTag: vi.fn().mockResolvedValue({
@@ -19,13 +19,13 @@ describe('GatewayParticipantService', () => {
         canDelete: false,
       }),
     } as unknown as ParticipantApiGateway;
-    const service = new GatewayParticipantService({
+    const controller = new GatewayParticipantController({
       gateway,
       mapper: new ParticipantPayloadMapper(),
     });
 
     await expect(
-      service.createTag({
+      controller.createTag({
         request: {
           coordinate: createTagCoordinate(0.25, 0.75),
           text: 'hello',
