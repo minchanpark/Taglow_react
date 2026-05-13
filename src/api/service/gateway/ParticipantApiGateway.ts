@@ -1,35 +1,35 @@
 /**
- * gateway가 서버에서 받은 원본 응답 형태이다.
- * ParticipantPayloadMapper로만 전달되며 query hook이나 View로 노출하지 않는다.
+ * 서버에서 온 원본 데이터 형태이다.
+ * 화면에서 바로 쓰지 않고 mapper가 앱용 데이터로 바꾼다.
  */
 export type RawPayload = Record<string, unknown> | Record<string, unknown>[];
 
 /**
- * 서버 endpoint/header/path 정책을 숨기는 transport adapter 계약이다.
- * GatewayParticipantController가 호출하고 구현체는 FetchParticipantApiGateway이다.
+ * 서버와 통신하는 기능들의 약속이다.
+ * 실제 fetch 코드는 FetchParticipantApiGateway에 있다.
  */
 export interface ParticipantApiGateway {
   /**
-   * 이벤트 display endpoint의 raw payload를 가져온다.
-   * GatewayParticipantController.fetchEvent가 mapper.eventFromPayload로 넘긴다.
+   * 홈 화면용 이벤트 데이터를 서버에서 가져온다.
+   * 가져온 데이터는 mapper가 Event 형태로 바꾼다.
    */
   fetchEvent(eventId: string): Promise<RawPayload>;
 
   /**
-   * 질문 목록 endpoint에서 route votePostId에 맞는 raw 질문 payload를 가져온다.
-   * GatewayParticipantController.fetchVotePost가 mapper.votePostDetailFromPayload로 넘긴다.
+   * 상세 화면용 질문 데이터를 서버에서 가져온다.
+   * votePostId에 맞는 질문 하나를 찾는 데 쓰인다.
    */
   fetchVotePost(params: { eventId: string; votePostId: string }): Promise<RawPayload>;
 
   /**
-   * 특정 질문의 태그 raw payload를 세션 header와 함께 가져온다.
-   * GatewayParticipantController.fetchTags가 mapper.tagsFromPayload로 넘긴다.
+   * 특정 질문에 달린 태그들을 서버에서 가져온다.
+   * sessionId는 내 태그를 구분할 때 함께 보낸다.
    */
   fetchTags(params: { votePostId: string; sessionId: string }): Promise<RawPayload>;
 
   /**
-   * mapper가 만든 태그 생성 body를 서버에 전송하고 raw 생성 결과를 반환한다.
-   * GatewayParticipantController.createTag가 mapper.tagFromPayload로 후처리한다.
+   * 새 태그를 서버에 저장한다.
+   * 저장 결과는 mapper가 화면용 태그로 바꾼다.
    */
   createTag(params: {
     votePostId: string;

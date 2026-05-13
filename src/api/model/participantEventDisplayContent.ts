@@ -1,6 +1,6 @@
 /**
- * 이벤트 화면과 완료 화면에서 표시할 문구 묶음이다.
- * ParticipantEvent.displayContent에 포함되어 View가 서버 DTO alias를 몰라도 되게 한다.
+ * 화면에 보여줄 문구들을 모아둔 값이다.
+ * 홈, 리워드, 완료 화면에서 필요한 문구가 들어간다.
  */
 export interface ParticipantEventDisplayContent {
   headline?: string;

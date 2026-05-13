@@ -1,8 +1,8 @@
 import type { TagType } from './tagType';
 
 /**
- * 사진/영상 태그가 표시할 media metadata이다.
- * CreateTagRequest.media와 ParticipantTag.media에서 사용되며 MVP에서는 text tag 이후 확장 지점이다.
+ * 사진이나 영상 태그에 필요한 정보이다.
+ * 현재 텍스트 태그 이후 확장할 때 사용한다.
  */
 export interface TagMedia {
   type: Exclude<TagType, 'text'>;

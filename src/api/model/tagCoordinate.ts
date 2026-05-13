@@ -1,6 +1,6 @@
 /**
- * rendered image bounds 기준 0.0..1.0 ratio 좌표이다.
- * mapper와 detail View의 좌표 변환은 pixel이 아니라 이 domain model로만 저장한다.
+ * 이미지 안에서의 위치를 0부터 1 사이 비율로 나타낸다.
+ * 픽셀 대신 비율을 쓰면 화면 크기가 달라도 같은 위치를 가리킨다.
  */
 export interface TagCoordinate {
   xRatio: number;
@@ -8,8 +8,8 @@ export interface TagCoordinate {
 }
 
 /**
- * raw ratio 값을 clamp해 유효한 TagCoordinate를 만든다.
- * ParticipantPayloadMapper.tagFromPayload와 image bounds utils가 좌표 생성에 사용한다.
+ * x, y 값을 안전한 TagCoordinate로 만든다.
+ * 0보다 작거나 1보다 큰 값은 범위 안으로 잘라낸다.
  */
 export function createTagCoordinate(xRatio: number, yRatio: number): TagCoordinate {
   return {
@@ -19,8 +19,8 @@ export function createTagCoordinate(xRatio: number, yRatio: number): TagCoordina
 }
 
 /**
- * 단일 ratio 값을 0.0..1.0 범위로 제한한다.
- * createTagCoordinate가 x/y 좌표 각각에 적용한다.
+ * 숫자 하나를 0부터 1 사이로 제한한다.
+ * 좌표 값이 이미지 밖으로 나가지 않게 한다.
  */
 export function clampRatio(value: number): number {
   if (!Number.isFinite(value)) return 0;
@@ -28,7 +28,7 @@ export function clampRatio(value: number): number {
 }
 
 /**
- * 좌표를 계산할 수 없을 때 사용하는 이미지 중앙 fallback이다.
- * detail View와 utility 함수가 안전한 기본 태그 위치로 사용할 수 있다.
+ * 좌표를 알 수 없을 때 쓰는 기본 위치이다.
+ * 이미지의 가운데를 의미한다.
  */
 export const defaultTagCoordinate = createTagCoordinate(0.5, 0.5);

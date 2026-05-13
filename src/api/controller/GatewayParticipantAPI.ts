@@ -1,16 +1,16 @@
 import type { CreateTagRequest, ParticipantEvent, ParticipantTag, VotePost } from '../model';
 import type { ParticipantApiGateway } from '../service/gateway/ParticipantApiGateway';
 import type { ParticipantPayloadMapper } from '../service/mapper/ParticipantPayloadMapper';
-import type { ParticipantController } from './ParticipantAPI';
+import type { ParticipantAPI } from './ParticipantAPI';
 
 /**
- * Gateway와 mapper를 조합해 query hook에 domain API를 제공하는 facade이다.
- * endpoint/header는 ParticipantApiGateway에, payload 정규화는 ParticipantPayloadMapper에 위임한다.
+ * 서버 호출 담당 gateway와 데이터 변환 담당 mapper를 이어준다.
+ * 화면 hook은 이 클래스를 통해 참여자 API를 사용한다.
  */
-export class GatewayParticipantController implements ParticipantController {
+export class GatewayParticipantAPI implements ParticipantAPI {
   /**
-   * transport adapter와 payload mapper를 주입받아 API 경계를 조립한다.
-   * participantControllerProvider가 실제 singleton을 생성한다.
+   * gateway와 mapper를 받아서 API 객체를 만든다.
+   * participantAPIProvider에서 한 번 생성해 앱 전체가 같이 쓴다.
    */
   constructor(
     private readonly deps: {
@@ -20,8 +20,8 @@ export class GatewayParticipantController implements ParticipantController {
   ) {}
 
   /**
-   * 이벤트 display raw payload를 ParticipantEvent로 변환해 반환한다.
-   * useItemListQuery -> gateway.fetchEvent -> mapper.eventFromPayload 흐름으로 연결된다.
+   * 서버에서 이벤트 정보를 받아 앱에서 쓰는 Event 형태로 바꾼다.
+   * 홈 화면 query에서 호출한다.
    */
   async fetchEvent(eventId: string): Promise<ParticipantEvent> {
     const payload = await this.deps.gateway.fetchEvent(eventId);
@@ -29,8 +29,8 @@ export class GatewayParticipantController implements ParticipantController {
   }
 
   /**
-   * 질문 raw payload를 상세 VotePost domain model로 변환한다.
-   * useTaggingDetailQuery가 호출하며 route eventId/votePostId는 gateway에서 path로 해석된다.
+   * 서버에서 질문 하나를 받아 앱에서 쓰는 VotePost 형태로 바꾼다.
+   * 상세 화면 query에서 호출한다.
    */
   async fetchVotePost(params: { eventId: string; votePostId: string }): Promise<VotePost> {
     const payload = await this.deps.gateway.fetchVotePost(params);
@@ -38,8 +38,8 @@ export class GatewayParticipantController implements ParticipantController {
   }
 
   /**
-   * 서버 태그 payload를 현재 세션 문맥으로 ParticipantTag 배열에 매핑한다.
-   * mapper.tagsFromPayload가 ownership/isMine 판단에 sessionId를 사용한다.
+   * 서버에서 태그 목록을 받아 앱에서 쓰는 태그 배열로 바꾼다.
+   * sessionId는 어떤 태그가 내 것인지 구분할 때 쓴다.
    */
   async fetchTags(params: { votePostId: string; sessionId: string }): Promise<ParticipantTag[]> {
     const payload = await this.deps.gateway.fetchTags(params);
@@ -47,8 +47,8 @@ export class GatewayParticipantController implements ParticipantController {
   }
 
   /**
-   * CreateTagRequest를 서버 body로 바꿔 저장하고 생성 태그를 domain model로 반환한다.
-   * gateway.createTag, mapper.createTagRequestToPayload, mapper.tagFromPayload를 순서대로 조합한다.
+   * 새 태그를 서버에 저장하고, 저장된 결과를 화면용 태그로 바꾼다.
+   * 요청 변환과 응답 변환은 mapper가 담당한다.
    */
   async createTag(params: {
     votePostId: string;

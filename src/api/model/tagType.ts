@@ -1,12 +1,12 @@
 /**
- * 참여자가 만들 수 있는 태그 종류 domain enum이다.
- * CreateTagRequest, ParticipantTag, normalizeTagType, mapper 변환에서 공유한다.
+ * 만들 수 있는 태그 종류이다.
+ * 텍스트, 사진, 영상 중 하나이다.
  */
 export type TagType = 'text' | 'photo' | 'video';
 
 /**
- * 서버 raw tag type alias를 domain TagType으로 정규화한다.
- * ParticipantPayloadMapper.tagFromPayload가 type/tagType field 변환에 사용한다.
+ * 서버가 보낸 태그 종류를 앱에서 쓰는 값으로 맞춘다.
+ * image는 photo로, 모르는 값은 text로 처리한다.
  */
 export function normalizeTagType(value: unknown): TagType {
   if (typeof value !== 'string') return 'text';

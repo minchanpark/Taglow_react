@@ -1,25 +1,26 @@
 import { ParticipantSessionStore } from '../../utils/localSessionStore';
 import { FetchParticipantApiGateway } from '../service/gateway/FetchParticipantApiGateway';
 import { ParticipantPayloadMapper } from '../service/mapper/ParticipantPayloadMapper';
-import { GatewayParticipantController } from './GatewayParticipantAPI';
+import { GatewayParticipantAPI } from './GatewayParticipantAPI';
 
 /**
- * OpenAPI gateway가 사용할 기본 서버 origin이다.
- * FetchParticipantApiGateway 생성자에 전달되어 모든 endpoint 요청의 baseUrl이 된다.
+ * 서버 주소 기본값이다.
+ * 환경변수에 값이 있으면 그 주소를 먼저 사용한다.
  */
 const apiBaseUrl = import.meta.env.VITE_TAGLOW_API_BASE_URL || 'https://vote.newdawnsoi.site';
 
 /**
- * 익명 참여 세션 id를 query hook에 제공하는 singleton이다.
- * useTaggingDetailQuery가 태그 조회/생성 시 gateway session header의 근거로 사용한다.
+ * 로그인 없이 참여자를 구분하기 위한 세션 저장소이다.
+ * 태그 조회와 생성 요청에서 같은 참여자인지 확인할 때 쓴다.
  */
 export const participantSessionStore = new ParticipantSessionStore();
 
 /**
- * query hook이 호출하는 실제 domain API controller singleton이다.
- * GatewayParticipantController에 FetchParticipantApiGateway와 ParticipantPayloadMapper를 주입한다.
+ * 화면 hook이 실제로 호출하는 참여자 API 객체이다.
+ * gateway는 서버 통신, mapper는 데이터 변환을 맡는다.
  */
-export const participantController = new GatewayParticipantController({
+export const participantController = new GatewayParticipantAPI({
   gateway: new FetchParticipantApiGateway(apiBaseUrl),
   mapper: new ParticipantPayloadMapper(),
 });
+  

@@ -1,13 +1,13 @@
 import type { ParticipantApiGateway, RawPayload } from './ParticipantApiGateway';
 
 /**
- * 서버 요청 실패를 status와 함께 controller/query 경계로 전달하는 error이다.
- * FetchParticipantApiGateway.requestJson이 생성하고 query hook의 error state로 이어진다.
+ * 서버 요청이 실패했을 때 쓰는 에러이다.
+ * HTTP 상태 코드를 같이 들고 있어 디버깅에 도움이 된다.
  */
 export class ParticipantApiError extends Error {
   /**
-   * 사용자용 message와 HTTP status를 함께 보존한다.
-   * requestJson의 response.ok 검사에서 사용된다.
+   * 에러 메시지와 HTTP 상태 코드를 저장한다.
+   * requestJson에서 응답이 실패했을 때 만들어진다.
    */
   constructor(
     message: string,
@@ -19,27 +19,27 @@ export class ParticipantApiError extends Error {
 }
 
 /**
- * fetch 기반 ParticipantApiGateway 구현체이다.
- * endpoint/path/header 정책을 소유하고 raw payload만 GatewayParticipantController에 반환한다.
+ * fetch로 실제 서버 API를 호출하는 클래스이다.
+ * URL, header, method 같은 통신 규칙을 여기서 관리한다.
  */
 export class FetchParticipantApiGateway implements ParticipantApiGateway {
   /**
-   * 서버 origin을 주입받아 모든 public API 요청의 base URL로 사용한다.
-   * participantControllerProvider가 환경변수 기반 값을 전달한다.
+   * 서버 기본 주소를 받는다.
+   * 모든 요청 URL 앞에 이 주소가 붙는다.
    */
   constructor(private readonly baseUrl: string) {}
 
   /**
-   * eventId를 backend voteId path로 사용해 display payload를 가져온다.
-   * GatewayParticipantController.fetchEvent가 이 결과를 mapper.eventFromPayload로 넘긴다.
+   * eventId에 해당하는 이벤트 정보를 가져온다.
+   * 서버에서는 이 값이 voteId처럼 쓰인다.
    */
   fetchEvent(eventId: string): Promise<RawPayload> {
     return this.requestJson(`/api/public/votes/${encodeURIComponent(eventId)}/display`);
   }
 
   /**
-   * eventId의 questions endpoint에서 votePostId/questionId에 맞는 항목을 선택한다.
-   * 선택된 raw payload는 mapper.votePostDetailFromPayload에서 VotePost로 변환된다.
+   * 질문 목록을 가져온 뒤 votePostId에 맞는 질문 하나를 고른다.
+   * 서버에서는 votePostId가 questionId처럼 쓰인다.
    */
   async fetchVotePost(params: { eventId: string; votePostId: string }): Promise<RawPayload> {
     const payload = await this.requestJson(`/api/public/votes/${encodeURIComponent(params.eventId)}/questions`);
@@ -60,8 +60,8 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
   }
 
   /**
-   * votePostId를 backend questionId path로 사용해 태그 payload를 가져온다.
-   * sessionHeaders가 만든 taglow-Session-Id는 mapper의 ownership 판단과 짝을 이룬다.
+   * 질문 하나에 달린 태그 목록을 가져온다.
+   * sessionId는 header에 넣어 현재 참여자를 알려준다.
    */
   fetchTags(params: { votePostId: string; sessionId: string }): Promise<RawPayload> {
     return this.requestJson(`/api/public/questions/${encodeURIComponent(params.votePostId)}/tags`, {
@@ -70,8 +70,8 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
   }
 
   /**
-   * 태그 생성 body를 JSON POST로 전송하고 생성된 raw tag payload를 반환한다.
-   * mapper.createTagRequestToPayload가 만든 payload에 backend questionId를 추가한다.
+   * 새 태그를 JSON으로 서버에 보낸다.
+   * body에는 서버가 필요한 questionId도 같이 넣는다.
    */
   createTag(params: {
     votePostId: string;
@@ -92,8 +92,8 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
   }
 
   /**
-   * 공통 fetch 실행, Accept header, error 변환, JSON 파싱을 담당한다.
-   * fetchEvent/fetchVotePost/fetchTags/createTag가 모두 이 메소드를 통해 서버를 호출한다.
+   * fetch 호출을 공통으로 처리한다.
+   * 성공하면 JSON을 돌려주고, 실패하면 ParticipantApiError를 던진다.
    */
   private async requestJson(path: string, options: RequestInit = {}): Promise<RawPayload> {
     const response = await fetch(`${this.baseUrl}${path}`, {
@@ -114,16 +114,16 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
 }
 
 /**
- * 세션 id가 있을 때만 taglow-Session-Id header를 만든다.
- * fetchTags/createTag가 사용하고 session id는 participantSessionStore에서 공급된다.
+ * sessionId가 있으면 서버에 보낼 세션 header를 만든다.
+ * 태그 조회와 생성 요청에서 사용한다.
  */
 function sessionHeaders(sessionId: string): Record<string, string> {
   return sessionId.trim() ? { 'taglow-Session-Id': sessionId } : {};
 }
 
 /**
- * route id 문자열을 서버 body에 맞게 정수 가능 값으로 바꾼다.
- * createTag가 questionId body field를 채울 때 사용한다.
+ * 숫자로 보이는 id 문자열은 숫자로 바꾼다.
+ * 태그 생성 body의 questionId를 만들 때 사용한다.
  */
 function numericPathId(value: string): string | number {
   const numberValue = Number(value);
@@ -131,8 +131,8 @@ function numericPathId(value: string): string | number {
 }
 
 /**
- * unknown payload를 plain record로 좁히는 gateway-local helper이다.
- * fetchVotePost가 nested question payload를 안전하게 탐색할 때 사용한다.
+ * 알 수 없는 값을 object처럼 읽어도 되는지 확인한다.
+ * 질문 목록에서 id를 찾을 때 사용한다.
  */
 function toRecord(value: unknown): Record<string, unknown> | undefined {
   return value && typeof value === 'object' && !Array.isArray(value)

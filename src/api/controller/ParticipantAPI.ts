@@ -1,31 +1,31 @@
 import type { CreateTagRequest, ParticipantEvent, ParticipantTag, VotePost } from '../model';
 
 /**
- * Query hooks가 사용하는 참여자 domain API 계약이다.
- * GatewayParticipantController가 구현하고 View에는 query hook을 통해 간접 노출된다.
+ * 화면 hook이 사용하는 참여자 API 약속이다.
+ * 실제 구현은 GatewayParticipantController가 맡는다.
  */
-export interface ParticipantController {
+export interface ParticipantAPI {
   /**
-   * 이벤트 홈 화면에 필요한 투표와 질문 목록을 domain model로 가져온다.
-   * useItemListQuery가 호출하고 gateway.fetchEvent/mapper.eventFromPayload와 연결된다.
+   * 홈 화면에 필요한 이벤트와 질문 목록을 가져온다.
+   * useItemListQuery에서 호출한다.
    */
   fetchEvent(eventId: string): Promise<ParticipantEvent>;
 
   /**
-   * 상세 화면의 단일 질문 정보를 domain model로 가져온다.
-   * useTaggingDetailQuery가 호출하고 gateway.fetchVotePost/mapper.votePostDetailFromPayload와 연결된다.
+   * 상세 화면에 보여줄 질문 하나를 가져온다.
+   * useTaggingDetailQuery에서 호출한다.
    */
   fetchVotePost(params: { eventId: string; votePostId: string }): Promise<VotePost>;
 
   /**
-   * 현재 세션 기준 태그 목록을 domain model 배열로 가져온다.
-   * useTaggingDetailQuery가 호출하고 gateway.fetchTags/mapper.tagsFromPayload와 연결된다.
+   * 현재 참여자가 볼 태그 목록을 가져온다.
+   * sessionId로 내 태그인지 판단할 수 있게 한다.
    */
   fetchTags(params: { votePostId: string; sessionId: string }): Promise<ParticipantTag[]>;
 
   /**
-   * 하단 입력바에서 만든 태그 요청을 서버에 저장하고 생성된 태그를 반환한다.
-   * useTaggingDetailQuery의 mutation이 호출하고 mapper.createTagRequestToPayload와 연결된다.
+   * 사용자가 만든 태그를 서버에 저장한다.
+   * 저장된 태그를 화면에서 바로 쓸 수 있는 형태로 돌려준다.
    */
   createTag(params: {
     votePostId: string;

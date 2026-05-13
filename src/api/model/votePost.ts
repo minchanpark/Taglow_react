@@ -1,6 +1,6 @@
 /**
- * `/e/:eventId/posts/:votePostId` 상세 화면이 사용하는 질문 domain model이다.
- * ParticipantPayloadMapper.votePostFromPayload가 만들고 home/detail query hook이 View에 전달한다.
+ * 사용자가 태그를 남길 질문 정보이다.
+ * 홈 카드와 상세 화면에서 같이 사용한다.
  */
 export interface VotePost {
   id: string;
@@ -17,8 +17,8 @@ export interface VotePost {
 }
 
 /**
- * 상세 이미지 렌더링에 필요한 URL과 ratio가 있는지 판단한다.
- * detail View나 query-derived state가 image fallback 여부를 결정할 때 사용할 수 있다.
+ * 상세 화면에 이미지를 보여줄 수 있는지 확인한다.
+ * imageUrl과 imageRatio가 둘 다 있어야 true이다.
  */
 export function hasImageDetail(votePost: VotePost): boolean {
   return Boolean(votePost.imageUrl?.trim() && votePost.imageRatio && votePost.imageRatio > 0);

@@ -2,8 +2,8 @@ import type { ParticipantEventDisplayContent } from './participantEventDisplayCo
 import type { VotePost } from './votePost';
 
 /**
- * `/e/:eventId` 홈 화면이 사용하는 이벤트 domain model이다.
- * ParticipantPayloadMapper.eventFromPayload가 만들고 useItemListQuery가 View에 전달한다.
+ * 홈 화면에서 쓰는 이벤트 정보이다.
+ * 제목, 설명, 질문 목록을 함께 담는다.
  */
 export interface ParticipantEvent {
   id: string;

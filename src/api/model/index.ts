@@ -1,6 +1,6 @@
 /**
- * api/model domain type과 helper를 한 곳에서 re-export하는 barrel이다.
- * controller, mapper, query hook이 서버 DTO 대신 이 안정된 domain surface를 import한다.
+ * api/model 파일들을 한 번에 export한다.
+ * 다른 파일은 여기서 필요한 타입과 helper를 가져다 쓸 수 있다.
  */
 export * from './createTagRequest';
 export * from './finalEntry';

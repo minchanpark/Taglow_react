@@ -1,6 +1,6 @@
 /**
- * thanks/final 흐름에서 선택적으로 제출하는 리워드 개인정보 domain model이다.
- * 향후 ParticipantController submit method와 mapper의 final entry payload 변환에 연결된다.
+ * 리워드 신청 때 사용자가 입력하는 개인정보 형태이다.
+ * 태그 데이터와는 따로 다룬다.
  */
 export interface FinalEntry {
   name: string;
@@ -10,8 +10,8 @@ export interface FinalEntry {
 }
 
 /**
- * 리워드 개인정보 제출 가능 여부를 순수 domain 규칙으로 판단한다.
- * thanks/final query나 View validation에서 FinalEntry와 함께 사용할 수 있다.
+ * 리워드 신청을 보낼 수 있는 상태인지 확인한다.
+ * 동의, 이름, 전화번호가 모두 있어야 true이다.
  */
 export function isConsentReady(entry: FinalEntry): boolean {
   return Boolean(entry.privacyConsent && entry.name.trim() && entry.phone.trim());

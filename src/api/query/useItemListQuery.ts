@@ -4,8 +4,8 @@ import { participantController } from '../controller/participantAPIProvider';
 import { participantQueryKeys } from './queryKeys';
 
 /**
- * 홈 화면이 사용할 이벤트/질문 목록 query 상태를 조립한다.
- * participantController.fetchEvent와 participantQueryKeys.event를 연결해 View에는 derived state만 반환한다.
+ * 홈 화면에 필요한 이벤트와 질문 목록 상태를 만든다.
+ * 화면은 이 hook이 주는 loading/data/error만 사용하면 된다.
  */
 export function useItemListQuery(eventId: string) {
   const eventQuery = useQuery({

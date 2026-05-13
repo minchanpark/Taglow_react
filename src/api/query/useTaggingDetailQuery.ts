@@ -5,8 +5,8 @@ import { participantController, participantSessionStore } from '../controller/pa
 import { participantQueryKeys } from './queryKeys';
 
 /**
- * 상세 태깅 화면의 질문, 태그 목록, 태그 생성 mutation을 조립한다.
- * participantController와 participantSessionStore를 연결해 View에는 저장 callback과 상태만 반환한다.
+ * 상세 태깅 화면에 필요한 질문, 태그, 저장 기능을 묶는다.
+ * 화면은 이 hook이 주는 값과 submitTextTag만 사용하면 된다.
  */
 export function useTaggingDetailQuery(params: { eventId: string; votePostId: string }) {
   const queryClient = useQueryClient();
