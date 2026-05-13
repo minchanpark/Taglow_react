@@ -7,7 +7,6 @@
 - `ParticipantController` interface를 query hook이 사용하는 안정적인 domain API 계약으로 유지한다.
 - `GatewayParticipantController`는 gateway 호출과 mapper 변환을 조합한다.
 - provider는 gateway/mapper/controller singleton과 session store를 조립한다.
-- `stores/`에는 draft, staged tag, overlay, reward form 같은 UI interaction state를 둔다.
 
 ## Guardrails
 

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { createTagCoordinate } from '../../api/model';
-import { GatewayParticipantController } from '../../api/controller/GatewayParticipantController';
+import { GatewayParticipantController } from '../../api/controller/GatewayParticipantAPI';
 import type { ParticipantApiGateway } from '../../api/service/gateway/ParticipantApiGateway';
 import { ParticipantPayloadMapper } from '../../api/service/mapper/ParticipantPayloadMapper';
 

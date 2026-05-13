@@ -1,9 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import type { CreateTagRequest, TagCoordinate } from '../model';
-import { participantController, participantSessionStore } from '../controller/participantControllerProvider';
+import { participantController, participantSessionStore } from '../controller/participantAPIProvider';
 import { participantQueryKeys } from './queryKeys';
 
+/**
+ * 상세 태깅 화면의 질문, 태그 목록, 태그 생성 mutation을 조립한다.
+ * participantController와 participantSessionStore를 연결해 View에는 저장 callback과 상태만 반환한다.
+ */
 export function useTaggingDetailQuery(params: { eventId: string; votePostId: string }) {
   const queryClient = useQueryClient();
   const sessionId = participantSessionStore.getOrCreateSessionId();

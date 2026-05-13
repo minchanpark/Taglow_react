@@ -1,8 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { participantController } from '../controller/participantControllerProvider';
+import { participantController } from '../controller/participantAPIProvider';
 import { participantQueryKeys } from './queryKeys';
 
+/**
+ * 홈 화면이 사용할 이벤트/질문 목록 query 상태를 조립한다.
+ * participantController.fetchEvent와 participantQueryKeys.event를 연결해 View에는 derived state만 반환한다.
+ */
 export function useItemListQuery(eventId: string) {
   const eventQuery = useQuery({
     queryFn: () => participantController.fetchEvent(eventId),
