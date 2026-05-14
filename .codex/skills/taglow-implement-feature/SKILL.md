@@ -1,6 +1,6 @@
 ---
 name: taglow-implement-feature
-description: "Implement Taglow React MVP features in React/TypeScript while preserving PRD/TDD architecture. Use when adding pages, controllers, stores, services, models, utils, theme code, app routing, or feature behavior for home, detail tagging, bottom input, thanks, final, or session flow."
+description: "Implement Taglow React MVP features in React/TypeScript while preserving PRD/TDD architecture. Use when adding pages, controllers, stores, services, models, utils, view-local CSS, app routing, or feature behavior for home, detail tagging, bottom input, thanks, final, or session flow."
 ---
 
 # Taglow Implement Feature
@@ -38,7 +38,7 @@ Implement features end to end without leaking responsibilities across layers. Fa
 - `src/api/controller`: hooks and store orchestration.
 - `src/view`: pages and widgets only.
 - `src/utils`: pure functions and safe browser wrappers.
-- `src/theme`: tokens and global CSS.
+- View CSS lives beside each page/component; do not add `src/theme` or runtime global CSS.
 
 ## Non-Negotiables
 

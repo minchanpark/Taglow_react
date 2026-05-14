@@ -1,4 +1,11 @@
-import type { CreateTagRequest, ParticipantEvent, ParticipantTag, VotePost } from '../model';
+import type {
+  CreateTagRequest,
+  FinalEntry,
+  ParticipantEvent,
+  ParticipantTag,
+  TagCoordinate,
+  VotePost,
+} from '../model';
 
 /**
  * 화면 hook이 사용하는 참여자 API 약속이다.
@@ -32,4 +39,24 @@ export interface ParticipantAPI {
     request: CreateTagRequest;
     sessionId: string;
   }): Promise<ParticipantTag>;
+
+  /**
+   * 사용자가 만든 태그의 위치를 서버에 반영한다.
+   */
+  updateTagPosition(params: {
+    tagId: string;
+    coordinate: TagCoordinate;
+    sessionId: string;
+  }): Promise<ParticipantTag>;
+
+  /**
+   * 사용자가 만든 태그를 삭제한다.
+   */
+  deleteTag(params: { tagId: string; sessionId: string }): Promise<void>;
+
+  /**
+   * 선택 리워드 신청 개인정보를 서버에 제출한다.
+   * 개인정보 응답은 저장하지 않는다.
+   */
+  submitFinalEntry(entry: FinalEntry): Promise<void>;
 }

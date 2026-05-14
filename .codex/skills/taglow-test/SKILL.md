@@ -48,7 +48,7 @@ E2E:
 
 1. Read the target directory `AGENTS.md`.
 2. Choose the lowest test layer that proves the behavior.
-3. Use Mock Service/MSW rather than real API for deterministic tests.
+3. Use MSW or fetch/gateway test doubles rather than real API for deterministic tests.
 4. Avoid PII in fixtures and snapshots.
 5. Run focused tests first, then broader commands.
 6. If a test cannot run because scaffolding is missing, state exactly what is missing.

@@ -73,4 +73,23 @@ describe('ParticipantPayloadMapper', () => {
       type: 'TEXT',
     });
   });
+
+  it('maps tag updates and reward entries to server payloads', () => {
+    expect(mapper.coordinateToPayload(createTagCoordinate(1.2, -0.2))).toEqual({
+      locationX: 1,
+      locationY: 0,
+    });
+
+    expect(
+      mapper.finalEntryToPayload({
+        name: '  Test Participant  ',
+        phone: '  0000000000  ',
+        privacyConsent: true,
+      }),
+    ).toEqual({
+      name: 'Test Participant',
+      phone: '0000000000',
+      privacyConsent: true,
+    });
+  });
 });

@@ -1,10 +1,38 @@
 .homeScreen {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: 520px;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+  margin: 0 auto;
+  overflow-y: auto;
+  box-sizing: border-box;
   padding: max(24px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
   background: #ffffff;
   color: #151515;
+  font-family: Pretendard, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.homeScreen *,
+.homeScreen *::before,
+.homeScreen *::after {
+  box-sizing: border-box;
+}
+
+.homeScreen a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.homeScreen button {
+  font: inherit;
+  cursor: pointer;
 }
 
 .homeHeader {
@@ -114,5 +142,13 @@
   .homeScreen {
     padding-right: 24px;
     padding-left: 24px;
+  }
+}
+
+@media (min-width: 640px) {
+  .homeScreen {
+    border-right: 1px solid #deded7;
+    border-left: 1px solid #deded7;
+    box-shadow: 0 0 18px rgb(0 0 0 / 6%);
   }
 }

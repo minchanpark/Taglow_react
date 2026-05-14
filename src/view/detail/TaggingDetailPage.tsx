@@ -418,7 +418,7 @@ export function TaggingDetailPage() {
   const visibleErrorMessage = errorMessage ?? tagErrorMessage;
 
   return (
-    <main className="mobileFrame taggingDetailPage">
+    <main className="taggingDetailPage">
       <header className="taggingDetailHeader">
         <Link className="taggingBackLink" aria-label="목록으로 돌아가기" to={`/e/${eventId}`}>
           <ChevronLeft size={18} />

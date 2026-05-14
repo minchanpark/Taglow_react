@@ -36,4 +36,25 @@ export interface ParticipantApiGateway {
     sessionId: string;
     payload: Record<string, unknown>;
   }): Promise<RawPayload>;
+
+  /**
+   * 저장된 태그의 위치나 내용을 수정한다.
+   * 서버 응답은 mapper가 다시 화면용 태그로 바꾼다.
+   */
+  updateTag(params: {
+    tagId: string;
+    sessionId: string;
+    payload: Record<string, unknown>;
+  }): Promise<RawPayload>;
+
+  /**
+   * 저장된 태그를 서버에서 삭제한다.
+   */
+  deleteTag(params: { tagId: string; sessionId: string }): Promise<void>;
+
+  /**
+   * 리워드 신청 개인정보를 서버에 제출한다.
+   * 응답 body는 개인정보를 포함할 수 있어 화면 domain으로 보관하지 않는다.
+   */
+  submitFinalEntry(params: { payload: Record<string, unknown> }): Promise<void>;
 }

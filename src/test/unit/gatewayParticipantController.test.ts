@@ -41,4 +41,28 @@ describe('GatewayParticipantController', () => {
       text: 'hello',
     });
   });
+
+  it('submits final reward entries through the mapper and gateway', async () => {
+    const gateway = {
+      submitFinalEntry: vi.fn().mockResolvedValue(undefined),
+    } as unknown as ParticipantApiGateway;
+    const controller = new GatewayParticipantController({
+      gateway,
+      mapper: new ParticipantPayloadMapper(),
+    });
+
+    await controller.submitFinalEntry({
+      name: '  Test Participant  ',
+      phone: '  0000000000  ',
+      privacyConsent: true,
+    });
+
+    expect(gateway.submitFinalEntry).toHaveBeenCalledWith({
+      payload: {
+        name: 'Test Participant',
+        phone: '0000000000',
+        privacyConsent: true,
+      },
+    });
+  });
 });

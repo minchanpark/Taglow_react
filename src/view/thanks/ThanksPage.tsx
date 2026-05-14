@@ -2,25 +2,38 @@ import { ChevronLeft } from 'lucide-react';
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import { useRewardSubmissionQuery } from '../../api/query/useRewardSubmissionQuery';
 import logoUrl from '../../assets/logo/taglow-logo.svg';
+import { validatePhoneNumber, validateRewardName } from '../../utils/inputValidator';
 import './ThanksPage.css';
 
 export function ThanksPage() {
   const { eventId = '11' } = useParams();
   const navigate = useNavigate();
+  const { errorMessage, isSubmitting, submitFinalEntry } = useRewardSubmissionQuery();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [privacyConsent, setPrivacyConsent] = useState(false);
-  const canSubmit = Boolean(name.trim() && phone.replace(/[^0-9]/g, '').length >= 8 && privacyConsent);
+  const canSubmit = Boolean(!validateRewardName(name) && !validatePhoneNumber(phone) && privacyConsent);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canSubmit) return;
-    navigate(`/e/${eventId}/final`);
+    if (!canSubmit || isSubmitting) return;
+
+    try {
+      await submitFinalEntry({
+        name,
+        phone,
+        privacyConsent,
+      });
+      navigate(`/e/${eventId}/final`);
+    } catch {
+      // Mutation state exposes the non-PII error message.
+    }
   }
 
   return (
-    <main className="mobileFrame thanksScreen">
+    <main className="thanksScreen">
       <header className="thanksTopBar">
         <button className="thanksBackButton" type="button" onClick={() => navigate(-1)}>
           <ChevronLeft size={24} strokeWidth={2.5} />
@@ -77,9 +90,14 @@ export function ThanksPage() {
           <span>개인정보 수집 및 리워드 안내에 동의합니다.</span>
         </label>
 
-        <button className="thanksSubmitButton" disabled={!canSubmit} type="submit">
-          제출하기
+        <button className="thanksSubmitButton" disabled={!canSubmit || isSubmitting} type="submit">
+          {isSubmitting ? '제출 중' : '제출하기'}
         </button>
+        {errorMessage && (
+          <p className="thanksErrorMessage" role="alert">
+            {errorMessage}
+          </p>
+        )}
       </form>
     </main>
   );

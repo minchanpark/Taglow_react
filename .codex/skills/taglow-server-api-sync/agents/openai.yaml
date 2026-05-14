@@ -1,0 +1,4 @@
+interface:
+  display_name: "Taglow Server API Sync"
+  short_description: "Sync Taglow frontend API with server changes"
+  default_prompt: "Use $taglow-server-api-sync to inspect the server API and update Taglow React API adapters."

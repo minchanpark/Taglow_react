@@ -10,6 +10,6 @@
 
 ## Guardrails
 
-- 서버 의존 테스트는 MSW나 Mock Service로 격리한다.
+- 서버 의존 테스트는 MSW나 fetch/gateway test double로 격리한다.
 - 실제 개인정보를 fixture에 넣지 않는다.
 - 실패/재시도/image fallback 같은 현장 리스크를 happy path보다 늦게 미루지 않는다.

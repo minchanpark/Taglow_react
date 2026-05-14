@@ -92,6 +92,50 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
   }
 
   /**
+   * 서버에 저장된 태그를 수정한다.
+   * PATCH body가 있으므로 JSON Content-Type을 붙인다.
+   */
+  updateTag(params: {
+    tagId: string;
+    sessionId: string;
+    payload: Record<string, unknown>;
+  }): Promise<RawPayload> {
+    return this.requestJson(`/api/public/tags/${encodeURIComponent(params.tagId)}`, {
+      body: JSON.stringify(params.payload),
+      headers: {
+        ...sessionHeaders(params.sessionId),
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+    });
+  }
+
+  /**
+   * 서버에 저장된 태그를 삭제한다.
+   * body 없는 DELETE라 Content-Type은 붙이지 않는다.
+   */
+  async deleteTag(params: { tagId: string; sessionId: string }): Promise<void> {
+    await this.requestJson(`/api/public/tags/${encodeURIComponent(params.tagId)}`, {
+      headers: sessionHeaders(params.sessionId),
+      method: 'DELETE',
+    });
+  }
+
+  /**
+   * 리워드 신청 개인정보를 서버에 제출한다.
+   * 개인정보 응답은 클라이언트 domain 상태에 보관하지 않는다.
+   */
+  async submitFinalEntry(params: { payload: Record<string, unknown> }): Promise<void> {
+    await this.requestJson('/api/public/event-users', {
+      body: JSON.stringify(params.payload),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    });
+  }
+
+  /**
    * fetch 호출을 공통으로 처리한다.
    * 성공하면 JSON을 돌려주고, 실패하면 ParticipantApiError를 던진다.
    */
@@ -109,7 +153,9 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
     }
 
     if (response.status === 204) return {};
-    return (await response.json()) as RawPayload;
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text) as RawPayload;
   }
 }
 

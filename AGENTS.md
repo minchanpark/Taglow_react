@@ -13,7 +13,7 @@
 - 참여자는 로그인 없이 태그를 남길 수 있어야 한다.
 - 리워드 개인정보 입력은 태그 제출 이후의 선택 흐름이며, 태그 데이터와 분리한다.
 - React 구현은 DOM `<img>`를 기본 이미지 렌더링 경로로 사용한다.
-- Mock 구현과 OpenAPI 구현은 같은 `ParticipantController` 계약으로 교체 가능해야 한다.
+- 참여자용 runtime API는 실 서버 `https://vote.newdawnsoi.site` 기반 gateway/mapper 계약을 사용한다.
 
 ## Architecture
 
@@ -58,7 +58,6 @@ src/
 │   ├── thanks/
 │   └── final/
 ├── utils/
-├── theme/
 ├── assets/
 │   ├── logo/
 │   ├── sticker/
@@ -76,6 +75,7 @@ src/
 - `taglow-product-architecture`: PRD/TDD 범위, MVP 단계, route/deploy, 아키텍처 의사결정.
 - `taglow-implement-feature`: React/TypeScript 기능 구현과 레이어 배치.
 - `taglow-api-boundary`: `ParticipantController`, gateway, mapper, DTO alias, endpoint/header 정책.
+- `taglow-server-api-sync`: 서버 Swagger/OpenAPI 변경 확인, gateway/mapper/controller/test 동기화.
 - `taglow-ui-interaction`: 모바일 UI, DOM `<img>`, image bounds, ratio 좌표, overlay, drag/drop, 하단 입력바.
 - `taglow-debug`: 런타임, 테스트, API, CORS, 이미지, 라우팅, 상태, drag/drop 문제 재현과 수정.
 - `taglow-security-privacy`: 개인정보, consent, storage, log redaction, secrets, CORS/origin 보안 점검.
@@ -88,7 +88,7 @@ src/
 
 - React + TypeScript + Vite를 기본으로 한다.
 - Server state는 TanStack Query, client interaction state는 Zustand를 기본으로 한다.
-- Styling은 CSS Modules 또는 plain CSS + `src/theme` token을 우선한다.
+- Styling은 각 `src/view/*` page 폴더의 plain CSS에서 page-local token/reset/frame을 함께 관리한다.
 - body 없는 GET에는 `Content-Type`을 붙이지 않는다.
 - JSON body가 있는 POST/PATCH에만 `Content-Type: application/json`을 사용한다.
 - session header는 `taglow-Session-Id`를 사용한다.

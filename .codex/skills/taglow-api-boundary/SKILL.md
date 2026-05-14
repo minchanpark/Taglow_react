@@ -1,6 +1,6 @@
 ---
 name: taglow-api-boundary
-description: "Implement, debug, or review Taglow API/domain boundaries: api/model, ParticipantService, MockParticipantService, OpenApiParticipantService, ParticipantApiGateway, FetchParticipantApiGateway, ParticipantPayloadMapper, session headers, endpoint mapping, and DTO alias normalization. Use whenever server payloads, requests, tags, events, questions, or reward submission are involved."
+description: "Implement, debug, or review Taglow API/domain boundaries: api/model, ParticipantService, OpenApiParticipantService, ParticipantApiGateway, FetchParticipantApiGateway, ParticipantPayloadMapper, session headers, endpoint mapping, and DTO alias normalization. Use whenever server payloads, requests, tags, events, questions, or reward submission are involved."
 ---
 
 # Taglow API Boundary
@@ -55,7 +55,7 @@ server API
 
 1. Change `api/model` only for stable app domain concepts.
 2. Change `ParticipantService` before implementation if controller needs a new capability.
-3. Update Mock and OpenAPI implementations together.
+3. Keep the real-server implementation and its tests aligned with the stable controller contract.
 4. Put endpoint/header/path logic in gateway.
 5. Put field alias and payload conversion in mapper.
 6. Add unit tests for mapper/gateway before relying on UI tests.

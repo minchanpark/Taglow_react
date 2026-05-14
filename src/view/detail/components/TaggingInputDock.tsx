@@ -66,9 +66,6 @@ export function TaggingInputDock({
 
   return (
     <form className="taggingInputBar" onSubmit={onSubmit}>
-      <label className="srOnly" htmlFor="tagText">
-        태그 입력
-      </label>
       <input
         id="tagText"
         maxLength={100}

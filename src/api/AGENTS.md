@@ -6,7 +6,7 @@
 
 - View가 안정적인 query hook 계약만 보도록 API 복잡도를 숨긴다.
 - 서버 endpoint/header/path id/DTO 변화는 controller/gateway/mapper 경계에서 흡수한다.
-- Mock 구현과 OpenAPI 구현이 같은 `ParticipantController` interface를 구현하게 한다.
+- 실 서버 gateway 구현이 `ParticipantController` interface를 안정적으로 만족하게 한다.
 
 ## Guardrails
 

@@ -11,7 +11,7 @@ export function ParticipantHomePage() {
     useItemListQuery(eventId);
 
   return (
-    <main className="mobileFrame homeScreen">
+    <main className="homeScreen">
       <header className="homeHeader">
         <img className="homeLogo" src={logoUrl} alt="Taglow" />
         <h1 className="homeVoteTitle">{event?.voteTitle ?? 'Taglow'}</h1>

@@ -198,7 +198,7 @@ React 구현에서 중요한 점:
 React 구현에서 중요한 점:
 
 - API 요청, 이미지 요청, 라우팅, 태그 좌표 계산을 Playwright로 검증할 수 있어야 한다.
-- Mock Service로 서버 장애 없이 UX를 확인할 수 있어야 한다.
+- 실 서버 장애/계약 변경은 gateway, mapper, test double 기반 테스트로 빠르게 확인할 수 있어야 한다.
 - DTO 변화는 Service/Mapper에서 흡수되어 View 변경이 최소화되어야 한다.
 - 서버 endpoint, header, path id 해석, DTO field alias 변화는 API 적응 계층에서만 추적 가능해야 한다.
 
@@ -656,8 +656,8 @@ Server Public API / DTO
 
 React MVP는 아래를 만족해야 한다.
 
-- Mock Service와 OpenAPI Service가 같은 `ParticipantService` interface를 구현한다.
-- OpenAPI Service는 gateway와 mapper를 통해서만 서버 API를 사용한다.
+- 실 서버 API adapter는 같은 `ParticipantService` interface를 안정적으로 구현한다.
+- API adapter는 gateway와 mapper를 통해서만 서버 API를 사용한다.
 - mapper 단위 테스트가 field alias, 이미지 URL 우선순위, 좌표 정규화, ownership 판단을 검증한다.
 - gateway 단위 테스트 또는 MSW 테스트가 endpoint, session header, bodyless GET header 정책을 검증한다.
 - 서버 DTO 변경이 발생했을 때 수정 범위는 gateway/mapper/service orchestration 안으로 제한된다.
@@ -716,7 +716,7 @@ QR route navigation start
 성공 기준:
 
 - 일반 모바일 네트워크에서 첫 텍스트 태그 등록 완료가 30초 안에 가능해야 한다.
-- Mock Service와 real API 각각에서 측정한다.
+- 실 서버 API 기준으로 측정하고, 자동화 테스트에서는 fetch/gateway test double로 회귀를 격리한다.
 
 ---
 
@@ -747,14 +747,14 @@ QR route navigation start
 
 ### 10-3. 이미지 실패
 
-1. Service mock으로 깨진 image URL을 반환한다.
+1. fetch/gateway test double로 깨진 image URL을 반환한다.
 2. 상세 화면에 진입한다.
 3. 이미지 fallback UI가 보인다.
 4. 태그 입력바는 화면을 깨뜨리지 않는다.
 
 ### 10-4. 저장 실패
 
-1. Mock Service가 tag create 실패를 반환하도록 설정한다.
+1. fetch/gateway test double이 tag create 실패를 반환하도록 설정한다.
 2. 태그를 제출한다.
 3. pending marker와 오류가 보인다.
 4. 재시도하면 성공할 수 있다.
@@ -788,7 +788,6 @@ QR route navigation start
 - `/e/:eventId/final`
 - ParticipantEvent/VotePost/ParticipantTag domain models
 - ParticipantService interface
-- MockParticipantService
 - OpenApiParticipantService
 - ParticipantApiGateway
 - ParticipantPayloadMapper

@@ -7,7 +7,7 @@ export function FinalPage() {
   const { eventId = '11' } = useParams();
 
   return (
-    <main className="mobileFrame finalScreen">
+    <main className="finalScreen">
       <section className="finalCard" aria-labelledby="finalTitle">
         <div className="finalCheckMark" aria-hidden="true">
           <Check size={68} strokeWidth={1.7} />

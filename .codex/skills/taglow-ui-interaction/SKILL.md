@@ -13,9 +13,8 @@ Implement the browser-native mobile tagging experience: fast visual feedback, st
 
 - `src/view/AGENTS.md`
 - Target page/widget `AGENTS.md`
-- `src/theme/AGENTS.md`
 - `src/utils/AGENTS.md`
-- PRD U1-U6 and TDD `이미지 및 좌표 설계`, `View 설계`, `Theme 설계`
+- PRD U1-U6 and TDD `이미지 및 좌표 설계`, `View 설계`, `View CSS 설계`
 
 ## UI Rules
 
@@ -39,7 +38,7 @@ Implement the browser-native mobile tagging experience: fast visual feedback, st
 
 ## Workflow
 
-1. Identify whether the work belongs in page, widget, utils, or theme.
+1. Identify whether the work belongs in page, widget, utils, or page-local CSS.
 2. Keep component props domain-oriented and callback-based.
 3. Put pure coordinate math in `src/utils` or `tagDropGeometry`.
 4. Keep API saves in controller callbacks, not widgets.

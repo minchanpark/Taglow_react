@@ -1,4 +1,11 @@
-import type { CreateTagRequest, ParticipantEvent, ParticipantTag, VotePost } from '../model';
+import type {
+  CreateTagRequest,
+  FinalEntry,
+  ParticipantEvent,
+  ParticipantTag,
+  TagCoordinate,
+  VotePost,
+} from '../model';
 import type { ParticipantApiGateway } from '../service/gateway/ParticipantApiGateway';
 import type { ParticipantPayloadMapper } from '../service/mapper/ParticipantPayloadMapper';
 import type { ParticipantAPI } from './ParticipantAPI';
@@ -72,4 +79,43 @@ export class GatewayParticipantAPI implements ParticipantAPI {
       isMine: true,
     };
   }
+
+  /**
+   * 태그 좌표 수정을 서버에 저장하고 domain 태그로 돌려준다.
+   */
+  async updateTagPosition(params: {
+    tagId: string;
+    coordinate: TagCoordinate;
+    sessionId: string;
+  }): Promise<ParticipantTag> {
+    const payload = await this.deps.gateway.updateTag({
+      tagId: params.tagId,
+      sessionId: params.sessionId,
+      payload: this.deps.mapper.coordinateToPayload(params.coordinate),
+    });
+
+    return this.deps.mapper.tagFromPayload(payload, {
+      votePostId: '',
+      sessionId: params.sessionId,
+    });
+  }
+
+  /**
+   * 태그 삭제를 서버에 요청한다.
+   */
+  deleteTag(params: { tagId: string; sessionId: string }): Promise<void> {
+    return this.deps.gateway.deleteTag(params);
+  }
+
+  /**
+   * 리워드 신청 개인정보를 서버에 제출한다.
+   * 서버 응답은 개인정보를 포함할 수 있어 보관하지 않는다.
+   */
+  submitFinalEntry(entry: FinalEntry): Promise<void> {
+    return this.deps.gateway.submitFinalEntry({
+      payload: this.deps.mapper.finalEntryToPayload(entry),
+    });
+  }
 }
+
+export { GatewayParticipantAPI as GatewayParticipantController };

@@ -2,8 +2,10 @@ import {
   createTagCoordinate,
   normalizeTagType,
   type CreateTagRequest,
+  type FinalEntry,
   type ParticipantEvent,
   type ParticipantTag,
+  type TagCoordinate,
   type VotePost,
 } from '../../model';
 
@@ -114,6 +116,29 @@ export class ParticipantPayloadMapper {
       duration: request.media?.durationSeconds ?? 0,
       locationX: request.coordinate.xRatio,
       locationY: request.coordinate.yRatio,
+    };
+  }
+
+  /**
+   * 태그 좌표 수정 요청을 서버 body로 바꾼다.
+   */
+  coordinateToPayload(coordinate: TagCoordinate): Record<string, unknown> {
+    const clampedCoordinate = createTagCoordinate(coordinate.xRatio, coordinate.yRatio);
+    return {
+      locationX: clampedCoordinate.xRatio,
+      locationY: clampedCoordinate.yRatio,
+    };
+  }
+
+  /**
+   * 리워드 신청 정보를 서버가 원하는 body로 바꾼다.
+   * 이 값은 저장하거나 logging하지 않는다.
+   */
+  finalEntryToPayload(entry: FinalEntry): Record<string, unknown> {
+    return {
+      name: entry.name.trim(),
+      phone: entry.phone.trim(),
+      privacyConsent: entry.privacyConsent,
     };
   }
 
