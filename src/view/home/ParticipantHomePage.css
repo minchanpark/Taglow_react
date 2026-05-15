@@ -127,6 +127,12 @@
   margin: 0;
 }
 
+.homeStateMessage.closed {
+  border-color: #151515;
+  background: #151515;
+  color: #ffffff;
+}
+
 .homeStateMessage button {
   min-height: 40px;
   border: 0;

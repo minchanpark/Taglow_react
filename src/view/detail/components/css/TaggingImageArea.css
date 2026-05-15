@@ -1,0 +1,103 @@
+.taggingImageStage {
+  position: relative;
+  display: grid;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background: var(--tagging-detail-background);
+}
+
+.taggingImageStage.isInteractionDisabled {
+  touch-action: auto;
+}
+
+.taggingImageFrame {
+  position: absolute;
+  overflow: hidden;
+  transform-origin: 0 0;
+  will-change: transform;
+  background: var(--tagging-detail-background);
+}
+
+.taggingQuestionImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.taggingImageNotice {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  padding: 9px 13px;
+  background: rgb(0 0 0 / 72%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.taggingImageNotice.error {
+  background: rgb(179 38 30 / 88%);
+}
+
+.taggingStickerLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.taggingStickerLayer .tagSticker-placed {
+  position: absolute;
+  left: var(--tag-x);
+  top: var(--tag-y);
+  transform: translate(-50%, -50%);
+}
+
+.taggingStickerLayer .tagSticker-placed.isDialogOpen {
+  transform: translate(calc(0% - var(--tag-dialog-tail-x)), calc(0% - var(--tag-dialog-tail-y)));
+}
+
+.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-left {
+  transform: translate(calc(var(--tag-dialog-tail-x) - 100%), calc(0% - var(--tag-dialog-tail-y)));
+}
+
+.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-below {
+  transform: translate(calc(0% - var(--tag-dialog-tail-x)), calc(var(--tag-dialog-tail-y) - 100%));
+}
+
+.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-left.isDialog-below {
+  transform: translate(calc(var(--tag-dialog-tail-x) - 100%), calc(var(--tag-dialog-tail-y) - 100%));
+}
+
+.taggingClosedOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 54%);
+  color: #ffffff;
+  text-align: center;
+}
+
+.taggingClosedOverlay p {
+  max-width: 280px;
+  margin: 0;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: rgb(13 16 17 / 86%);
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.35;
+}

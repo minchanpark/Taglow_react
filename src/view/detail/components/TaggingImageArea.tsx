@@ -2,14 +2,17 @@ import type { CSSProperties, PointerEvent, RefObject, SyntheticEvent, WheelEvent
 
 import { TagSticker } from '../../../components/TagSticker';
 import type { ParticipantTag } from '../../../api/model';
+import './css/TaggingImageArea.css';
 
 interface TaggingImageAreaProps {
   altText: string;
+  closedMessage?: string;
   imageFrameRef: RefObject<HTMLDivElement>;
   imageFrameStyle: CSSProperties;
   imageStageRef: RefObject<HTMLDivElement>;
   imageState: 'loading' | 'loaded' | 'error';
   imageUrl?: string;
+  isInteractionDisabled?: boolean;
   onImageError(): void;
   onImageLoad(event: SyntheticEvent<HTMLImageElement>): void;
   onStagePointerCancel(event: PointerEvent<HTMLElement>): void;
@@ -23,11 +26,13 @@ interface TaggingImageAreaProps {
 
 export function TaggingImageArea({
   altText,
+  closedMessage,
   imageFrameRef,
   imageFrameStyle,
   imageStageRef,
   imageState,
   imageUrl,
+  isInteractionDisabled = false,
   onImageError,
   onImageLoad,
   onStagePointerCancel,
@@ -40,14 +45,15 @@ export function TaggingImageArea({
 }: TaggingImageAreaProps) {
   return (
     <section
-      className="taggingImageStage"
+      className={`taggingImageStage${isInteractionDisabled ? ' isInteractionDisabled' : ''}`}
       ref={imageStageRef}
       aria-label="태깅 이미지"
-      onPointerCancel={onStagePointerCancel}
-      onPointerDown={onStagePointerDown}
-      onPointerMove={onStagePointerMove}
-      onPointerUp={onStagePointerUp}
-      onWheel={onStageWheel}
+      aria-disabled={isInteractionDisabled}
+      onPointerCancel={isInteractionDisabled ? undefined : onStagePointerCancel}
+      onPointerDown={isInteractionDisabled ? undefined : onStagePointerDown}
+      onPointerMove={isInteractionDisabled ? undefined : onStagePointerMove}
+      onPointerUp={isInteractionDisabled ? undefined : onStagePointerUp}
+      onWheel={isInteractionDisabled ? undefined : onStageWheel}
     >
       <div className="taggingImageFrame" ref={imageFrameRef} style={imageFrameStyle}>
         {imageUrl ? (
@@ -60,12 +66,16 @@ export function TaggingImageArea({
             onError={onImageError}
             onLoad={onImageLoad}
           />
-        ) : (
+        ) : !closedMessage ? (
           <div className="taggingImageNotice error">이미지가 없습니다</div>
-        )}
+        ) : null}
 
-        {imageState === 'loading' && imageUrl && <div className="taggingImageNotice">이미지를 불러오는 중입니다</div>}
-        {imageState === 'error' && <div className="taggingImageNotice error">이미지를 불러오지 못했습니다</div>}
+        {!closedMessage && imageState === 'loading' && imageUrl && (
+          <div className="taggingImageNotice">이미지를 불러오는 중입니다</div>
+        )}
+        {!closedMessage && imageState === 'error' && (
+          <div className="taggingImageNotice error">이미지를 불러오지 못했습니다</div>
+        )}
 
         <div className="taggingStickerLayer" aria-label="이미지 위 태그">
           {tags.map((tag) => (
@@ -84,6 +94,11 @@ export function TaggingImageArea({
           ))}
         </div>
       </div>
+      {closedMessage && (
+        <div className="taggingClosedOverlay" role="status">
+          <p>{closedMessage}</p>
+        </div>
+      )}
     </section>
   );
 }

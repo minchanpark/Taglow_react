@@ -1,6 +1,7 @@
 import type { CSSProperties, FormEvent, KeyboardEvent, PointerEvent } from 'react';
 
 import { TagSticker } from '../../../components/TagSticker';
+import './css/TaggingInputDock.css';
 
 interface StagedStickerViewModel {
   text: string;

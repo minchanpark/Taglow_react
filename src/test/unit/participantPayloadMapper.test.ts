@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createTagCoordinate } from '../../api/model';
+import { createTagCoordinate, isParticipantEventEnded } from '../../api/model';
 import { ParticipantPayloadMapper } from '../../api/service/mapper/ParticipantPayloadMapper';
 
 describe('ParticipantPayloadMapper', () => {
@@ -27,6 +27,7 @@ describe('ParticipantPayloadMapper', () => {
 
     expect(event.id).toBe('11');
     expect(event.voteTitle).toBe('Test');
+    expect(isParticipantEventEnded(event)).toBe(false);
     expect(event.votePosts[0]).toMatchObject({
       id: '31',
       description: 'Pick a country',
@@ -35,6 +36,12 @@ describe('ParticipantPayloadMapper', () => {
       tagCount: 2,
       title: 'Asia',
     });
+  });
+
+  it('detects ended participant events from normalized status text', () => {
+    expect(isParticipantEventEnded({ status: 'END' })).toBe(true);
+    expect(isParticipantEventEnded({ status: ' end ' })).toBe(true);
+    expect(isParticipantEventEnded({ status: 'PROGRESS' })).toBe(false);
   });
 
   it('maps tag coordinate aliases and create request payloads', () => {

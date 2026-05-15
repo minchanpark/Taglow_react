@@ -71,8 +71,19 @@ function distanceBetweenPointers(first: ImagePointerPosition, second: ImagePoint
 
 export function TaggingDetailPage() {
   const { eventId = '11', votePostId = '31' } = useParams();
-  const { errorMessage, isLoading, isSavingTag, retry, submitTextTag, tagErrorMessage, tags, votePost } =
-    useTaggingDetailQuery({ eventId, votePostId });
+  const {
+    errorMessage,
+    event,
+    isLoading,
+    isParticipationClosed,
+    isSavingTag,
+    participationClosedMessage,
+    retry,
+    submitTextTag,
+    tagErrorMessage,
+    tags,
+    votePost,
+  } = useTaggingDetailQuery({ eventId, votePostId });
   const imageFrameRef = useRef<HTMLDivElement>(null);
   const imageStageRef = useRef<HTMLDivElement>(null);
   const imageViewportTransformRef = useRef<ImageViewportTransform>(initialImageViewportTransform);
@@ -105,6 +116,16 @@ export function TaggingDetailPage() {
     setStagedDragPosition(undefined);
     setIsDraggingStagedTag(false);
   }, [votePost?.id, votePost?.imageRatio, votePost?.imageUrl]);
+
+  useEffect(() => {
+    if (!isParticipationClosed) return;
+
+    activeImagePointersRef.current.clear();
+    imagePanSnapshotRef.current = undefined;
+    imagePinchSnapshotRef.current = undefined;
+    setIsDraggingStagedTag(false);
+    setStagedDragPosition(undefined);
+  }, [isParticipationClosed]);
 
   useEffect(() => {
     const bodyStyle = document.body.style;
@@ -234,6 +255,8 @@ export function TaggingDetailPage() {
   }
 
   function handleImageStagePointerDown(event: PointerEvent<HTMLElement>) {
+    if (isParticipationClosed) return;
+
     const isTagStickerPointer = event.target instanceof Element && event.target.closest('.tagSticker');
     if (event.button !== 0 || isTagStickerPointer) return;
     if (imageFrame.width <= 0 || imageFrame.height <= 0) return;
@@ -260,6 +283,7 @@ export function TaggingDetailPage() {
   }
 
   function handleImageStagePointerMove(event: PointerEvent<HTMLElement>) {
+    if (isParticipationClosed) return;
     if (!activeImagePointersRef.current.has(event.pointerId)) return;
 
     event.preventDefault();
@@ -294,6 +318,8 @@ export function TaggingDetailPage() {
   }
 
   function handleImageStagePointerEnd(event: PointerEvent<HTMLElement>) {
+    if (isParticipationClosed) return;
+
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -320,6 +346,7 @@ export function TaggingDetailPage() {
   }
 
   function handleImageStageWheel(event: WheelEvent<HTMLElement>) {
+    if (isParticipationClosed) return;
     if (imageFrame.width <= 0 || imageFrame.height <= 0) return;
 
     event.preventDefault();
@@ -356,6 +383,11 @@ export function TaggingDetailPage() {
 
   function handleTagSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (isParticipationClosed) {
+      setDraftError(participationClosedMessage);
+      return;
+    }
+
     const error = validateTagText(tagText);
     if (error) {
       setDraftError(error);
@@ -374,6 +406,8 @@ export function TaggingDetailPage() {
   }
 
   function handleStagedTagPointerDown(event: PointerEvent<HTMLButtonElement>) {
+    if (isParticipationClosed) return;
+
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
     setIsDraggingStagedTag(true);
@@ -381,12 +415,21 @@ export function TaggingDetailPage() {
   }
 
   function handleStagedTagPointerMove(event: PointerEvent<HTMLButtonElement>) {
+    if (isParticipationClosed) return;
     if (!isDraggingStagedTag) return;
     setStagedDragPosition({ x: event.clientX, y: event.clientY });
   }
 
   async function handleStagedTagPointerUp(event: PointerEvent<HTMLButtonElement>) {
-    event.currentTarget.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+
+    if (isParticipationClosed) {
+      setIsDraggingStagedTag(false);
+      setStagedDragPosition(undefined);
+      return;
+    }
 
     if (stagedTag && isPointerInsideImage(event)) {
       try {
@@ -416,27 +459,36 @@ export function TaggingDetailPage() {
   }
 
   const visibleErrorMessage = errorMessage ?? tagErrorMessage;
+  const pageTitle = votePost?.title ?? event?.voteTitle ?? '질문';
 
   return (
-    <main className="taggingDetailPage">
+    <main className={`taggingDetailPage${isParticipationClosed ? ' isClosed' : ''}`}>
       <header className="taggingDetailHeader">
         <Link className="taggingBackLink" aria-label="목록으로 돌아가기" to={`/e/${eventId}`}>
           <ChevronLeft size={18} />
           <span>목록</span>
         </Link>
-        <h1 className="taggingQuestionTitle">{votePost?.title ?? '질문'}</h1>
-        <Link className="taggingDoneButton" to={`/e/${eventId}/thanks`}>
-          완료
-        </Link>
+        <h1 className="taggingQuestionTitle">{pageTitle}</h1>
+        {isParticipationClosed ? (
+          <span className="taggingDoneButton isDisabled" aria-disabled="true">
+            종료
+          </span>
+        ) : (
+          <Link className="taggingDoneButton" to={`/e/${eventId}/thanks`}>
+            완료
+          </Link>
+        )}
       </header>
 
       <TaggingImageArea
         altText={votePost?.altText ?? votePost?.title ?? '태깅 이미지'}
+        closedMessage={participationClosedMessage}
         imageFrameRef={imageFrameRef}
         imageFrameStyle={imageFrameStyle}
         imageStageRef={imageStageRef}
         imageState={isLoading ? 'loading' : imageState}
         imageUrl={votePost?.imageUrl}
+        isInteractionDisabled={isParticipationClosed}
         onImageError={() => setImageState('error')}
         onImageLoad={handleImageLoad}
         onStagePointerCancel={handleImageStagePointerEnd}
@@ -460,22 +512,29 @@ export function TaggingDetailPage() {
       )}
       {isSavingTag && <div className="taggingSaveStatus">태그를 저장하는 중입니다</div>}
 
-      <TaggingInputDock
-        draftError={draftError}
-        isDraggingStagedTag={isDraggingStagedTag}
-        onStagedPointerCancel={handleStagedTagPointerCancel}
-        onStagedPointerDown={handleStagedTagPointerDown}
-        onStagedPointerMove={handleStagedTagPointerMove}
-        onStagedPointerUp={(event) => void handleStagedTagPointerUp(event)}
-        onSubmit={handleTagSubmit}
-        onTextChange={(value) => {
-          setTagText(value);
-          setDraftError(undefined);
-        }}
-        stagedDragPosition={stagedDragPosition}
-        stagedTag={stagedTag}
-        tagText={tagText}
-      />
+      {isParticipationClosed ? (
+        <div className="taggingClosedDock" role="status">
+          <p>{participationClosedMessage}</p>
+          <Link to={`/e/${eventId}`}>목록으로 돌아가기</Link>
+        </div>
+      ) : (
+        <TaggingInputDock
+          draftError={draftError}
+          isDraggingStagedTag={isDraggingStagedTag}
+          onStagedPointerCancel={handleStagedTagPointerCancel}
+          onStagedPointerDown={handleStagedTagPointerDown}
+          onStagedPointerMove={handleStagedTagPointerMove}
+          onStagedPointerUp={(event) => void handleStagedTagPointerUp(event)}
+          onSubmit={handleTagSubmit}
+          onTextChange={(value) => {
+            setTagText(value);
+            setDraftError(undefined);
+          }}
+          stagedDragPosition={stagedDragPosition}
+          stagedTag={stagedTag}
+          tagText={tagText}
+        />
+      )}
     </main>
   );
 }

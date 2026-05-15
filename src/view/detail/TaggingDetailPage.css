@@ -66,7 +66,7 @@
   color: #ffffff;
 }
 
-a.taggingDoneButton {
+.taggingDoneButton {
   justify-self: end;
   min-width: 48px;
   padding: 0 12px;
@@ -82,6 +82,12 @@ a.taggingDoneButton:visited {
   color: #0d1011;
 }
 
+.taggingDoneButton.isDisabled {
+  background: #313131;
+  color: rgb(255 255 255 / 72%);
+  cursor: default;
+}
+
 .taggingQuestionTitle {
   overflow: hidden;
   margin: 0;
@@ -92,51 +98,6 @@ a.taggingDoneButton:visited {
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.taggingImageStage {
-  position: relative;
-  min-height: 0;
-  overflow: hidden;
-  overscroll-behavior: none;
-  touch-action: none;
-  background: var(--tagging-detail-background);
-}
-
-.taggingImageFrame {
-  position: absolute;
-  overflow: hidden;
-  transform-origin: 0 0;
-  will-change: transform;
-  background: var(--tagging-detail-background);
-}
-
-.taggingQuestionImage {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  touch-action: none;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.taggingImageNotice {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  z-index: 2;
-  transform: translate(-50%, -50%);
-  border-radius: 999px;
-  padding: 9px 13px;
-  background: rgb(0 0 0 / 72%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.taggingImageNotice.error {
-  background: rgb(179 38 30 / 88%);
 }
 
 .taggingErrorBanner,
@@ -184,117 +145,47 @@ a.taggingDoneButton:visited {
   color: #ffffff;
 }
 
-.taggingStickerLayer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.taggingStickerLayer .tagSticker-placed {
-  position: absolute;
-  left: var(--tag-x);
-  top: var(--tag-y);
-  transform: translate(-50%, -50%);
-}
-
-.taggingStickerLayer .tagSticker-placed.isDialogOpen {
-  transform: translate(calc(0% - var(--tag-dialog-tail-x)), calc(0% - var(--tag-dialog-tail-y)));
-}
-
-.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-left {
-  transform: translate(calc(var(--tag-dialog-tail-x) - 100%), calc(0% - var(--tag-dialog-tail-y)));
-}
-
-.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-below {
-  transform: translate(calc(0% - var(--tag-dialog-tail-x)), calc(var(--tag-dialog-tail-y) - 100%));
-}
-
-.taggingStickerLayer .tagSticker-placed.isDialogOpen.isDialog-left.isDialog-below {
-  transform: translate(calc(var(--tag-dialog-tail-x) - 100%), calc(var(--tag-dialog-tail-y) - 100%));
-}
-
-.taggingStagedDock {
-  position: absolute;
-  right: 13px;
-  bottom: max(10px, env(safe-area-inset-bottom));
-  left: 13px;
-  z-index: 4;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.taggingStagedDock .tagSticker-staged {
-  position: relative;
-}
-
-.taggingStagedDock .tagSticker-staged.dragging {
-  position: fixed;
-  top: var(--drag-y);
-  left: var(--drag-x);
-  z-index: 10;
-  transform: translate(-50%, -50%);
-}
-
-.taggingInputBar {
+.taggingClosedDock {
   position: absolute;
   right: 13px;
   bottom: max(13px, env(safe-area-inset-bottom));
   left: 13px;
   z-index: 4;
   display: grid;
-  min-height: clamp(54px, 16vw, 66px);
-  align-items: center;
-  border: 2px solid #ffd100;
-  border-radius: 999px;
-  padding: 0 22px;
-  background: rgb(0 0 0 / 80%);
-  box-shadow: 0 0 clamp(5px, 1.35vw, 14px) clamp(4px, 1.15vw, 12px) rgb(255 247 210 / 82%);
-}
-
-.taggingInputBar input {
-  width: 100%;
-  min-width: 0;
-  min-height: 44px;
-  border: 0;
-  border-radius: 0;
-  outline: 0;
-  padding: 0;
-  background: transparent;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.taggingInputBar input::placeholder {
-  color: rgb(255 255 255 / 88%);
-}
-
-.taggingInputBar input:focus {
-  box-shadow: none;
-}
-
-.taggingInputBar:focus-within {
-  box-shadow:
-    0 0 0 3px rgb(255 209 0 / 28%),
-    0 0 clamp(5px, 1.35vw, 14px) clamp(4px, 1.15vw, 12px) rgb(255 247 210 / 92%);
-}
-
-.taggingInputError {
-  position: absolute;
-  right: 16px;
-  bottom: calc(100% + 8px);
-  left: 16px;
-  margin: 0;
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: rgb(179 38 30 / 92%);
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.2;
+  gap: 10px;
+  justify-items: center;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 8px;
+  padding: 14px;
+  background: rgb(0 0 0 / 86%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 32%);
   text-align: center;
+}
+
+.taggingClosedDock p {
+  margin: 0;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.taggingClosedDock a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 16px;
+  background: #ffffff;
+  color: #0d1011;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.taggingClosedDock a:visited {
+  color: #0d1011;
 }
 
 @media (min-width: 640px) {

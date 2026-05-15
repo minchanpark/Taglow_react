@@ -15,3 +15,7 @@ export interface ParticipantEvent {
   startedAt?: string;
   endedAt?: string;
 }
+
+export function isParticipantEventEnded(event?: Pick<ParticipantEvent, 'status'>): boolean {
+  return event?.status.trim().toUpperCase() === 'END';
+}

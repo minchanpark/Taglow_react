@@ -7,8 +7,18 @@ import './ParticipantHomePage.css';
 
 export function ParticipantHomePage() {
   const { eventId = '11' } = useParams();
-  const { emptyItemsMessage, errorMessage, event, hrefForVotePost, isLoading, retry, retryActionLabel, votePosts } =
-    useItemListQuery(eventId);
+  const {
+    emptyItemsMessage,
+    errorMessage,
+    event,
+    hrefForVotePost,
+    isLoading,
+    isParticipationClosed,
+    participationClosedMessage,
+    retry,
+    retryActionLabel,
+    votePosts,
+  } = useItemListQuery(eventId);
 
   return (
     <main className="homeScreen">
@@ -27,6 +37,7 @@ export function ParticipantHomePage() {
             </button>
           </div>
         )}
+        {isParticipationClosed && <p className="homeStateMessage closed">{participationClosedMessage}</p>}
         {emptyItemsMessage && <p className="homeStateMessage">{emptyItemsMessage}</p>}
         {votePosts.map((votePost) => (
           <HomeQuestionCard href={hrefForVotePost(votePost.id)} key={votePost.id} votePost={votePost} />
