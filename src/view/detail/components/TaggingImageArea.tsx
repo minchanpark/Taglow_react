@@ -43,6 +43,10 @@ export function TaggingImageArea({
   stickerUrlForTag,
   tags,
 }: TaggingImageAreaProps) {
+  const shouldShowLoadingIndicator = !closedMessage && imageState === 'loading';
+  const shouldShowMissingImage = !closedMessage && imageState !== 'loading' && !imageUrl;
+  const shouldShowImageError = !closedMessage && imageState === 'error' && Boolean(imageUrl);
+
   return (
     <section
       className={`taggingImageStage${isInteractionDisabled ? ' isInteractionDisabled' : ''}`}
@@ -66,16 +70,17 @@ export function TaggingImageArea({
             onError={onImageError}
             onLoad={onImageLoad}
           />
-        ) : !closedMessage ? (
+        ) : shouldShowMissingImage ? (
           <div className="taggingImageNotice error">이미지가 없습니다</div>
         ) : null}
 
-        {!closedMessage && imageState === 'loading' && imageUrl && (
-          <div className="taggingImageNotice">이미지를 불러오는 중입니다</div>
+        {shouldShowLoadingIndicator && (
+          <div className="taggingImageLoadingIndicator" role="status" aria-live="polite">
+            <span className="taggingImageSpinner" aria-hidden="true" />
+            <span className="taggingVisuallyHidden">이미지를 불러오는 중입니다</span>
+          </div>
         )}
-        {!closedMessage && imageState === 'error' && (
-          <div className="taggingImageNotice error">이미지를 불러오지 못했습니다</div>
-        )}
+        {shouldShowImageError && <div className="taggingImageNotice error">이미지를 불러오지 못했습니다</div>}
 
         <div className="taggingStickerLayer" aria-label="이미지 위 태그">
           {tags.map((tag) => (

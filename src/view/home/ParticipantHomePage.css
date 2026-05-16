@@ -44,13 +44,15 @@
 
 .homeLogo {
   display: block;
-  width: 74px;
+  width: 120px;
   height: auto;
+  padding-top: 10px;
+  padding-bottom: 20px;
 }
 
 .homeVoteTitle {
   margin: 0;
-  font-size: 28px;
+  font-size: 25px;
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: 0;

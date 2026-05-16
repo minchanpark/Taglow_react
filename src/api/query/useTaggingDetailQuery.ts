@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { isParticipantEventEnded, type CreateTagRequest, type TagCoordinate } from '../model';
+import {
+  getParticipantQuestion,
+  isParticipantEventEnded,
+  type CreateTagRequest,
+  type TagCoordinate,
+} from '../model';
 import { participantController, participantSessionStore } from '../controller/participantAPIProvider';
 import { participantQueryKeys } from './queryKeys';
 
@@ -18,19 +23,20 @@ export function useTaggingDetailQuery(params: { eventId: string; votePostId: str
     queryKey: participantQueryKeys.event(params.eventId),
   });
   const isEventEnded = isParticipantEventEnded(eventQuery.data);
-  const votePostQuery = useQuery({
-    enabled: eventQuery.isSuccess && !isEventEnded,
-    queryFn: () => participantController.fetchVotePost(params),
-    queryKey: participantQueryKeys.votePost(params.eventId, params.votePostId),
-  });
+  const votePost = getParticipantQuestion(eventQuery.data, params.votePostId);
+  const isVotePostMissing = eventQuery.isSuccess && !isEventEnded && !votePost;
   const tagsQuery = useQuery({
-    enabled: eventQuery.isSuccess && !isEventEnded,
+    enabled: eventQuery.isSuccess && !isEventEnded && Boolean(votePost),
     queryFn: () => participantController.fetchTags({ votePostId: params.votePostId, sessionId }),
     queryKey: participantQueryKeys.tags(params.votePostId, sessionId),
   });
   const createTagMutation = useMutation({
     mutationFn: (request: CreateTagRequest) => {
-      if (isEventEnded) return Promise.reject(new Error(participationClosedMessage));
+      if (isEventEnded || isAccessClosedApiError(eventQuery.error)) {
+        return Promise.reject(new Error(participationClosedMessage));
+      }
+
+      if (!votePost) return Promise.reject(new Error('질문을 불러오지 못했습니다.'));
 
       return participantController.createTag({
         request,
@@ -47,20 +53,20 @@ export function useTaggingDetailQuery(params: { eventId: string; votePostId: str
 
   const isParticipationClosed =
     isEventEnded ||
-    isAccessClosedApiError(votePostQuery.error) ||
+    isAccessClosedApiError(eventQuery.error) ||
     isAccessClosedApiError(tagsQuery.error) ||
     isAccessClosedApiError(createTagMutation.error);
   const currentSessionTags = (tagsQuery.data ?? []).filter((tag) => tag.isMine);
 
   return {
-    isLoading: eventQuery.isLoading || votePostQuery.isLoading,
+    isLoading: eventQuery.isLoading,
     event: eventQuery.data,
     isParticipationClosed,
     participationClosedMessage: isParticipationClosed ? participationClosedMessage : undefined,
-    votePost: votePostQuery.data,
+    votePost,
     tags: currentSessionTags,
     errorMessage:
-      !isParticipationClosed && (eventQuery.isError || votePostQuery.isError)
+      !isParticipationClosed && (eventQuery.isError || isVotePostMissing)
         ? '질문을 불러오지 못했습니다.'
         : undefined,
     tagErrorMessage:
@@ -70,8 +76,7 @@ export function useTaggingDetailQuery(params: { eventId: string; votePostId: str
     isSavingTag: createTagMutation.isPending,
     retry: () => {
       void eventQuery.refetch();
-      if (eventQuery.isSuccess && !isEventEnded) {
-        void votePostQuery.refetch();
+      if (eventQuery.isSuccess && !isEventEnded && votePost) {
         void tagsQuery.refetch();
       }
     },

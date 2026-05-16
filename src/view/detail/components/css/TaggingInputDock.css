@@ -1,11 +1,11 @@
 .taggingStagedDock {
-  position: absolute;
-  right: 13px;
-  bottom: max(10px, env(safe-area-inset-bottom));
-  left: 13px;
+  position: relative;
   z-index: 4;
   display: flex;
+  min-height: 118px;
+  align-items: center;
   justify-content: center;
+  margin: 0 13px max(10px, env(safe-area-inset-bottom));
   pointer-events: none;
 }
 
@@ -22,14 +22,12 @@
 }
 
 .taggingInputBar {
-  position: absolute;
-  right: 13px;
-  bottom: max(13px, env(safe-area-inset-bottom));
-  left: 13px;
+  position: relative;
   z-index: 4;
   display: grid;
   min-height: clamp(54px, 16vw, 66px);
   align-items: center;
+  margin: 0 13px max(13px, env(safe-area-inset-bottom));
   border: 2px solid #ffd100;
   border-radius: 999px;
   padding: 0 22px;

@@ -1,5 +1,6 @@
 import {
   createTagCoordinate,
+  normalizeParticipantEventStatus,
   normalizeTagType,
   type CreateTagRequest,
   type FinalEntry,
@@ -39,13 +40,15 @@ export class ParticipantPayloadMapper {
     const voteTitle = stringFromAliases(record, ['voteTitle', 'vote_title', 'voteName', 'vote_name', 'title', 'name'], 'vote title');
     const voteDescription = stringFromAliases(record, ['voteDescription', 'vote_description', 'description', 'detail'], '');
     const questions = arrayFromAliases(record, ['votePosts', 'vote_posts', 'posts', 'questions']);
+    const votePosts = questions.map((item, index) => this.votePostFromPayload(item, eventId, index));
 
     return {
       id: eventId,
       voteTitle,
       voteDescription,
-      votePosts: questions.map((item, index) => this.votePostFromPayload(item, eventId, index)),
-      status: stringFromAliases(record, ['status'], 'UNKNOWN'),
+      votePosts,
+      questionsById: recordById(votePosts),
+      status: normalizeParticipantEventStatus(firstPresent(record, ['status'])),
       displayContent: {
         description: voteDescription,
         headline: voteTitle,
@@ -53,14 +56,6 @@ export class ParticipantPayloadMapper {
       startedAt: optionalStringFromAliases(record, ['startedAt', 'started_at']),
       endedAt: optionalStringFromAliases(record, ['endedAt', 'ended_at']),
     };
-  }
-
-  /**
-   * 서버의 질문 데이터를 앱의 VotePost로 바꾼다.
-   * 상세 화면에서 질문 이미지와 제목을 보여줄 때 쓰인다.
-   */
-  votePostDetailFromPayload(payload: unknown, params: { eventId: string; votePostId: string }): VotePost {
-    return this.votePostFromPayload(payload, params.eventId, 0);
   }
 
   /**
@@ -194,6 +189,10 @@ function toRecord(value: unknown): Record<string, unknown> | undefined {
   return value && typeof value === 'object' && !Array.isArray(value)
     ? (value as Record<string, unknown>)
     : undefined;
+}
+
+function recordById<T extends { id: string }>(items: T[]): Record<string, T> {
+  return Object.fromEntries(items.map((item) => [item.id, item]));
 }
 
 /**

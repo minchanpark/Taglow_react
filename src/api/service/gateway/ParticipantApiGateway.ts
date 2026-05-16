@@ -16,12 +16,6 @@ export interface ParticipantApiGateway {
   fetchEvent(eventId: string): Promise<RawPayload>;
 
   /**
-   * 상세 화면용 질문 데이터를 서버에서 가져온다.
-   * votePostId에 맞는 질문 하나를 찾는 데 쓰인다.
-   */
-  fetchVotePost(params: { eventId: string; votePostId: string }): Promise<RawPayload>;
-
-  /**
    * 특정 질문에 달린 태그들을 서버에서 가져온다.
    * sessionId는 내 태그를 구분할 때 함께 보낸다.
    */

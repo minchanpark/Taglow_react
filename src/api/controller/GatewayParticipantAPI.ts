@@ -1,11 +1,11 @@
 import type {
   CreateTagRequest,
   FinalEntry,
-  ParticipantEvent,
   ParticipantTag,
   TagCoordinate,
-  VotePost,
+  Question,
 } from '../model';
+import { getParticipantQuestion, type ParticipantEvent } from '../model';
 import type { ParticipantApiGateway } from '../service/gateway/ParticipantApiGateway';
 import type { ParticipantPayloadMapper } from '../service/mapper/ParticipantPayloadMapper';
 import type { ParticipantAPI } from './ParticipantAPI';
@@ -37,11 +37,13 @@ export class GatewayParticipantAPI implements ParticipantAPI {
 
   /**
    * 서버에서 질문 하나를 받아 앱에서 쓰는 VotePost 형태로 바꾼다.
-   * 상세 화면 query에서 호출한다.
+   * display 응답에 포함된 질문 lookup을 사용해 별도 questions 요청을 피한다.
    */
-  async fetchVotePost(params: { eventId: string; votePostId: string }): Promise<VotePost> {
-    const payload = await this.deps.gateway.fetchVotePost(params);
-    return this.deps.mapper.votePostDetailFromPayload(payload, params);
+  async fetchVotePost(params: { eventId: string; votePostId: string }): Promise<Question> {
+    const event = await this.fetchEvent(params.eventId);
+    const question = getParticipantQuestion(event, params.votePostId);
+    if (!question) throw new Error('질문을 찾을 수 없습니다.');
+    return question;
   }
 
   /**

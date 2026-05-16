@@ -6,7 +6,7 @@
   width: 100%;
   max-width: 520px;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100dvh;
   min-height: 100dvh;
   max-height: 100dvh;
@@ -46,7 +46,9 @@
 .taggingDetailHeader {
   display: grid;
   grid-template-columns: 74px minmax(0, 1fr) 74px;
-  padding: max(20px, env(safe-area-inset-top)) 20px 5px;
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-left: 20px;
+  padding-right: 20px;
   background: var(--tagging-detail-background);
 }
 
@@ -146,14 +148,12 @@ a.taggingDoneButton:visited {
 }
 
 .taggingClosedDock {
-  position: absolute;
-  right: 13px;
-  bottom: max(13px, env(safe-area-inset-bottom));
-  left: 13px;
+  position: relative;
   z-index: 4;
   display: grid;
   gap: 10px;
   justify-items: center;
+  margin: 0 13px max(13px, env(safe-area-inset-bottom));
   border: 1px solid rgb(255 255 255 / 18%);
   border-radius: 8px;
   padding: 14px;

@@ -38,28 +38,6 @@ export class FetchParticipantApiGateway implements ParticipantApiGateway {
   }
 
   /**
-   * 질문 목록을 가져온 뒤 votePostId에 맞는 질문 하나를 고른다.
-   * 서버에서는 votePostId가 questionId처럼 쓰인다.
-   */
-  async fetchVotePost(params: { eventId: string; votePostId: string }): Promise<RawPayload> {
-    const payload = await this.requestJson(`/api/public/votes/${encodeURIComponent(params.eventId)}/questions`);
-    const questions = Array.isArray(payload) ? payload : payload.questions;
-    if (!Array.isArray(questions)) return payload;
-
-    const selected = questions.find((item) => {
-      const record = toRecord(item);
-      const question = toRecord(record?.question) ?? record;
-      return String(question?.id ?? question?.questionId ?? question?.question_id ?? '') === params.votePostId;
-    });
-
-    if (!selected) {
-      throw new ParticipantApiError('질문을 찾을 수 없습니다.', 404);
-    }
-
-    return toRecord(selected) ?? {};
-  }
-
-  /**
    * 질문 하나에 달린 태그 목록을 가져온다.
    * sessionId는 header에 넣어 현재 참여자를 알려준다.
    */
@@ -174,14 +152,4 @@ function sessionHeaders(sessionId: string): Record<string, string> {
 function numericPathId(value: string): string | number {
   const numberValue = Number(value);
   return Number.isInteger(numberValue) ? numberValue : value;
-}
-
-/**
- * 알 수 없는 값을 object처럼 읽어도 되는지 확인한다.
- * 질문 목록에서 id를 찾을 때 사용한다.
- */
-function toRecord(value: unknown): Record<string, unknown> | undefined {
-  return value && typeof value === 'object' && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : undefined;
 }

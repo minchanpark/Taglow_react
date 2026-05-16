@@ -14,7 +14,7 @@ export function useItemListQuery(eventId: string) {
     queryKey: participantQueryKeys.event(eventId),
   });
 
-  const votePosts = [...(eventQuery.data?.votePosts ?? [])].sort((left, right) => left.sortOrder - right.sortOrder);
+  const votePosts = eventQuery.data?.votePosts ?? [];
   const isParticipationClosed = isParticipantEventEnded(eventQuery.data);
 
   return {

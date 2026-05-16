@@ -4,7 +4,7 @@ import type {
   ParticipantEvent,
   ParticipantTag,
   TagCoordinate,
-  VotePost,
+  Question,
 } from '../model';
 
 /**
@@ -20,9 +20,9 @@ export interface ParticipantAPI {
 
   /**
    * 상세 화면에 보여줄 질문 하나를 가져온다.
-   * useTaggingDetailQuery에서 호출한다.
+   * display 응답의 질문 lookup에서 꺼내 별도 질문 목록 요청을 피한다.
    */
-  fetchVotePost(params: { eventId: string; votePostId: string }): Promise<VotePost>;
+  fetchVotePost(params: { eventId: string; votePostId: string }): Promise<Question>;
 
   /**
    * 현재 참여자가 볼 태그 목록을 가져온다.

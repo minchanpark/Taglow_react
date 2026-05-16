@@ -6,6 +6,38 @@ import type { ParticipantApiGateway } from '../../api/service/gateway/Participan
 import { ParticipantPayloadMapper } from '../../api/service/mapper/ParticipantPayloadMapper';
 
 describe('GatewayParticipantController', () => {
+  it('selects a question from the display payload without a questions endpoint call', async () => {
+    const gateway = {
+      fetchEvent: vi.fn().mockResolvedValue({
+        voteId: 11,
+        voteName: 'Test',
+        status: 'PROGRESS',
+        questions: [
+          {
+            question: {
+              id: 31,
+              title: 'Asia',
+              detail: 'Pick a country',
+              imageUrl: 'https://example.com/image.jpg',
+              imageRatio: 7353,
+            },
+          },
+        ],
+      }),
+    } as unknown as ParticipantApiGateway;
+    const controller = new GatewayParticipantController({
+      gateway,
+      mapper: new ParticipantPayloadMapper(),
+    });
+
+    await expect(controller.fetchVotePost({ eventId: '11', votePostId: '31' })).resolves.toMatchObject({
+      id: '31',
+      imageRatio: 0.7353,
+      title: 'Asia',
+    });
+    expect(gateway.fetchEvent).toHaveBeenCalledWith('11');
+  });
+
   it('marks a newly created tag as mine for the current session', async () => {
     const gateway = {
       createTag: vi.fn().mockResolvedValue({

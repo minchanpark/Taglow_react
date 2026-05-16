@@ -2,7 +2,7 @@
  * 사용자가 태그를 남길 질문 정보이다.
  * 홈 카드와 상세 화면에서 같이 사용한다.
  */
-export interface VotePost {
+export interface Question {
   id: string;
   eventId: string;
   title: string;
@@ -16,10 +16,12 @@ export interface VotePost {
   sortOrder: number;
 }
 
+export type VotePost = Question;
+
 /**
  * 상세 화면에 이미지를 보여줄 수 있는지 확인한다.
  * imageUrl과 imageRatio가 둘 다 있어야 true이다.
  */
-export function hasImageDetail(votePost: VotePost): boolean {
-  return Boolean(votePost.imageUrl?.trim() && votePost.imageRatio && votePost.imageRatio > 0);
+export function hasImageDetail(question: Question): boolean {
+  return Boolean(question.imageUrl?.trim() && question.imageRatio && question.imageRatio > 0);
 }
