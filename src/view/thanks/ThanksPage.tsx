@@ -49,7 +49,6 @@ export function ThanksPage() {
       </div>
 
       <section className="thanksIntro" aria-labelledby="thanksTitle">
-        <h1 id="thanksTitle">조금만 더 부탁드려요!</h1>
         <p>
           성함과 전화번호를 남겨주시면 추첨을 통해
           <br />
