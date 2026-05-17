@@ -79,6 +79,7 @@ export class GatewayParticipantAPI implements ParticipantAPI {
       ...createdTag,
       canDelete: true,
       isMine: true,
+      stickerSeed: params.request.stickerSeed ?? createdTag.stickerSeed,
     };
   }
 

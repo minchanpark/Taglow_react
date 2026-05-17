@@ -399,7 +399,7 @@ export function TaggingDetailPage() {
       id: `staged-tag-${seed}`,
       seed,
       text: tagText.trim(),
-      stickerUrl: stickerUrls[seed % stickerUrls.length],
+      stickerUrl: stickerUrlFromSeed(seed),
     });
     setTagText('');
     setDraftError(undefined);
@@ -541,5 +541,9 @@ export function TaggingDetailPage() {
 
 function stickerUrlForTag(tag: ParticipantTag): string {
   const seed = tag.stickerSeed ?? (Number(tag.id) || 0);
-  return stickerUrls[Math.abs(seed) % stickerUrls.length];
+  return stickerUrlFromSeed(seed);
+}
+
+function stickerUrlFromSeed(seed: number): string {
+  return stickerUrls[Math.abs(seed) % stickerUrls.length] ?? stickerUrls[0];
 }

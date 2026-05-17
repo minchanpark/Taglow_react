@@ -60,6 +60,7 @@ describe('GatewayParticipantController', () => {
       controller.createTag({
         request: {
           coordinate: createTagCoordinate(0.25, 0.75),
+          stickerSeed: 7,
           text: 'hello',
           type: 'text',
         },
@@ -70,6 +71,7 @@ describe('GatewayParticipantController', () => {
       canDelete: true,
       id: '123',
       isMine: true,
+      stickerSeed: 7,
       text: 'hello',
     });
   });

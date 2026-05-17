@@ -111,7 +111,7 @@ export function TagSticker({
 
   return (
     <button
-      className={`tagSticker tagSticker-${variant} ${isDragging ? 'dragging' : ''} ${
+      className={`tagSticker tagSticker-marker tagSticker-${variant} ${isDragging ? 'dragging' : ''} ${
         isDialogOpen ? `isDialogOpen isDialog-${dialogHorizontalDirection} isDialog-${dialogVerticalDirection}` : ''
       } ${className}`.trim()}
       ref={buttonRef}

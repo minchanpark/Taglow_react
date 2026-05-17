@@ -1,4 +1,8 @@
 .tagSticker {
+  --tag-sticker-base-size: 40px;
+  --tag-sticker-size: var(--tag-sticker-base-size);
+  --tag-sticker-staged-size: calc(var(--tag-sticker-base-size) + 10px);
+  --tag-sticker-shadow: drop-shadow(0 4px 10px rgb(0 0 0 / 24%));
   --tag-dialog-tail-x: 10.65%;
   --tag-dialog-tail-y: 96.7%;
 
@@ -18,9 +22,6 @@
   opacity: 1;
 }
 
-/*
-드래그 되기 전, 스티커 태그 이미지 자체의 크기를 조절하는 CSS
-*/
 .tagStickerIcon,
 .tagStickerDialogImage {
   display: block;
@@ -31,41 +32,49 @@
   -webkit-user-drag: none;
 }
 
+.tagSticker-marker {
+  width: var(--tag-sticker-size);
+  height: var(--tag-sticker-size);
+}
+
+.tagSticker-marker .tagStickerIcon {
+  width: var(--tag-sticker-size);
+  height: var(--tag-sticker-size);
+  filter: var(--tag-sticker-shadow);
+}
+
 .tagSticker-placed {
-  width: 40px;
-  height: 40px;
   cursor: pointer;
 }
 
-/* 
-이미지에 올려진 스티커 태그 이미지 자체의 크기를 조절하는 CSS
-*/
-.tagSticker-placed .tagStickerIcon {
-  width: 40px;
-  height: 40px;
-  filter: drop-shadow(0 4px 10px rgb(0 0 0 / 24%));
+.tagSticker-staged {
+  --tag-sticker-size: var(--tag-sticker-staged-size);
+
+  cursor: grab;
+}
+
+.tagSticker-staged.dragging {
+  cursor: grabbing;
 }
 
 .tagSticker-placed.isDialogOpen {
+  z-index: 5;
   box-sizing: border-box;
   width: max-content;
   min-width: 92px;
   max-width: min(72vw, 320px);
   min-height: 54px;
   height: auto;
-  padding: 13px 22px 25px 30px;
-  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 18%));
-  z-index: 5;
-}
-
-.tagSticker-placed.isDialog-left {
+  padding-bottom: 25px;
+  padding-top: 20px;
   padding-right: 30px;
-  padding-left: 22px;
+  padding-left: 30px;
+  filter: drop-shadow(0 4px 12px rgb(0 0 0 / 18%));
 }
 
 .tagSticker-placed.isDialog-below {
   padding-top: 25px;
-  padding-bottom: 13px;
+  padding-bottom: 20px;
 }
 
 .tagStickerDialog {
@@ -107,20 +116,4 @@
   white-space: normal;
   overflow-wrap: anywhere;
   pointer-events: none;
-}
-
-.tagSticker-staged {
-  width: 140px;
-  min-height: 118px;
-  cursor: grab;
-}
-
-.tagSticker-staged.dragging {
-  cursor: grabbing;
-}
-
-.tagSticker-staged .tagStickerIcon {
-  width: 116px;
-  height: 116px;
-  filter: drop-shadow(0 6px 14px rgb(0 0 0 / 26%));
 }
